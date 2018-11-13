@@ -1,5 +1,6 @@
-package backEnd.Objects;
+package backEnd.Objects.finalStr;
 
+import backEnd.Objects.dataType;
 import java.util.LinkedList;
 
 /**

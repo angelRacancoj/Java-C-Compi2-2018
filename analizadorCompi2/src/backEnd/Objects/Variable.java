@@ -11,7 +11,8 @@ package backEnd.Objects;
  */
 public class Variable {
 
-    double vDouble;
+    int vInteger;
+    float vFloat;
     String vString;
     boolean vBool;
     int category;
@@ -20,8 +21,13 @@ public class Variable {
         this.category = category;
     }
 
-    public Variable(double vDouble, int category) {
-        this.vDouble = vDouble;
+    public Variable(int vInteger, int category) {
+        this.vInteger = vInteger;
+        this.category = category;
+    }
+
+    public Variable(float vFloat, int category) {
+        this.vFloat = vFloat;
         this.category = category;
     }
 
@@ -35,8 +41,9 @@ public class Variable {
         this.category = category;
     }
 
-    public Variable(double vDouble, String vString, boolean vBool, int category) {
-        this.vDouble = vDouble;
+    public Variable(float vFloat, int vInteger, String vString, boolean vBool, int category) {
+        this.vFloat = vFloat;
+        this.vInteger = vInteger;
         this.vString = vString;
         this.vBool = vBool;
         this.category = category;
@@ -66,12 +73,20 @@ public class Variable {
         this.category = category;
     }
 
-    public double getvDouble() {
-        return vDouble;
+    public int getvInteger() {
+        return vInteger;
     }
 
-    public void setvDouble(double vDouble) {
-        this.vDouble = vDouble;
+    public void setvInteger(int vInteger) {
+        this.vInteger = vInteger;
+    }
+
+    public float getvFloat() {
+        return vFloat;
+    }
+
+    public void setvFloat(float vFloat) {
+        this.vFloat = vFloat;
     }
 
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package backEnd.Objects;
+package backEnd.Objects.finalStr;
 
 import backEnd.langConstants.languageConstants;
 

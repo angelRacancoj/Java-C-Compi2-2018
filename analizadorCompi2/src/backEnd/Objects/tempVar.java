@@ -16,15 +16,30 @@ public class tempVar extends Variable {
     String id3Dir;
 
     /**
-     * This variable is to do the arithmetic calculus
+     * This variable is to do the arithmetic calculus storing the Integer values
      *
-     * @param vDouble
      * @param category
      * @param row
+     * @param vInteger
      * @param column
      */
-    public tempVar(double vDouble, int category, int row, int column) {
-        super(vDouble, category);
+    public tempVar(int vInteger, int row, int column, int category) {
+        super(vInteger, category);
+        this.row = row;
+        this.column = column;
+        this.id3Dir = "";
+    }
+
+    /**
+     * This variable is to do the arithmetic calculus storing the Float values
+     *
+     * @param vFloat
+     * @param row
+     * @param column
+     * @param category
+     */
+    public tempVar(float vFloat, int row, int column, int category) {
+        super(vFloat, category);
         this.row = row;
         this.column = column;
         this.id3Dir = "";
@@ -61,16 +76,32 @@ public class tempVar extends Variable {
     }
 
     /**
-     * This variable is to do the arithmetic calculus
+     * This variable is to do the arithmetic calculus storing the Integer values
      *
-     * @param vDouble
      * @param category
      * @param row
+     * @param vInteger
      * @param column
      * @param id3Dir
      */
-    public tempVar(double vDouble, int category, int row, int column, String id3Dir) {
-        super(vDouble, category);
+    public tempVar(int vInteger, int row, int column, int category, String id3Dir) {
+        super(vInteger, category);
+        this.row = row;
+        this.column = column;
+        this.id3Dir = id3Dir;
+    }
+
+    /**
+     * This variable is to do the arithmetic calculus storing the Float values
+     *
+     * @param vFloat
+     * @param row
+     * @param column
+     * @param category
+     * @param id3Dir
+     */
+    public tempVar(float vFloat, int row, int column, int category, String id3Dir) {
+        super(vFloat, category);
         this.row = row;
         this.column = column;
         this.id3Dir = id3Dir;
@@ -109,7 +140,7 @@ public class tempVar extends Variable {
     }
 
     public tempVar(int category, int row, int column) {
-        super(0, "", true, category);
+        super(0, 0, "", true, category);
         this.row = row;
         this.column = column;
     }
@@ -136,14 +167,6 @@ public class tempVar extends Variable {
 
     public void setId3Dir(String id3Dir) {
         this.id3Dir = id3Dir;
-    }
-
-    public double getvDouble() {
-        return vDouble;
-    }
-
-    public void setvDouble(double vDouble) {
-        this.vDouble = vDouble;
     }
 
     @Override
@@ -174,6 +197,26 @@ public class tempVar extends Variable {
     @Override
     public void setCategory(int category) {
         this.category = category;
+    }
+
+    @Override
+    public int getvInteger() {
+        return vInteger;
+    }
+
+    @Override
+    public void setvInteger(int vInteger) {
+        this.vInteger = vInteger;
+    }
+
+    @Override
+    public float getvFloat() {
+        return vFloat;
+    }
+
+    @Override
+    public void setvFloat(float vFloat) {
+        this.vFloat = vFloat;
     }
 
 }

@@ -18,7 +18,7 @@ public class languageConstants {
     }
 
     /*aux Operators*/
-    public final int DOUBLE_AUX = -1;
+    //public final int DOUBLE_AUX = -1;
     //public final int BOOL_AUX = 2;
     //public final int STRING_AUX = 3;
 
@@ -58,6 +58,9 @@ public class languageConstants {
     public final String IF_LABLE = "lf";
     public final String WHILE_LABLE = "lw";
     public final String else_LABLE = "";
+
+    /*The front name of the variables*/
+    public final String VARIABLE_LABLE = "";
 
     /*Etiquetas para analizadores*/
     public final int AN_LEXICO = 1;

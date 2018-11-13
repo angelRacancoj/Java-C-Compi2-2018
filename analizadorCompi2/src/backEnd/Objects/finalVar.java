@@ -15,21 +15,17 @@ public class finalVar extends Variable {
 
     languageConstants languageC = new languageConstants();
 
-    int vInteger;
-    float vFloat;
     dataType dType;
     String idVar;
 
-    public finalVar(int vInteger, dataType dType, String idVar, int category) {
-        super(category);
-        this.vInteger = vInteger;
+    public finalVar(String idVar, dataType dType, int vInteger, int category) {
+        super(vInteger, category);
         this.dType = dType;
         this.idVar = idVar;
     }
 
-    public finalVar(float vFloat, dataType dType, String idVar, int category) {
-        super(category);
-        this.vFloat = vFloat;
+    public finalVar(String idVar, dataType dType, float vFloat, int category) {
+        super(vFloat, category);
         this.dType = dType;
         this.idVar = idVar;
     }
@@ -83,18 +79,22 @@ public class finalVar extends Variable {
         this.dType = dType;
     }
 
+    @Override
     public int getvInteger() {
         return vInteger;
     }
 
+    @Override
     public void setvInteger(int vInteger) {
         this.vInteger = vInteger;
     }
 
+    @Override
     public float getvFloat() {
         return vFloat;
     }
 
+    @Override
     public void setvFloat(float vFloat) {
         this.vFloat = vFloat;
     }
@@ -105,16 +105,6 @@ public class finalVar extends Variable {
 
     public void setIdVar(String idVar) {
         this.idVar = idVar;
-    }
-
-    @Override
-    public double getvDouble() {
-        return vDouble;
-    }
-
-    @Override
-    public void setvDouble(double vDouble) {
-        this.vDouble = vDouble;
     }
 
     @Override

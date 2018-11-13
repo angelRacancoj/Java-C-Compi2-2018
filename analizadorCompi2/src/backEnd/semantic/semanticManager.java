@@ -5,6 +5,8 @@
  */
 package backEnd.semantic;
 
+import backEnd.Objects.finalStr.errorObject;
+import backEnd.Objects.finalStr.cuarteta;
 import backEnd.Objects.*;
 import backEnd.files.ManejadorArchivo;
 import backEnd.langConstants.languageConstants;
@@ -53,9 +55,9 @@ public class semanticManager {
 
         if (tempFinalV != null) {
             if (tempFinalV.getdType().getNameData() == languageC.INTEGER) {
-                return new tempVar(tempFinalV.getvInteger(), languageC.DOUBLE_AUX, row, column, id);
+                return new tempVar(tempFinalV.getvInteger(), languageC.INTEGER, row, column, id);
             } else if (tempFinalV.getdType().getNameData() == languageC.FLOAT) {
-                return new tempVar(tempFinalV.getvFloat(), languageC.DOUBLE_AUX, row, column, id);
+                return new tempVar(tempFinalV.getvFloat(), languageC.FLOAT, row, column, id);
             } else if (tempFinalV.getdType().getNameData() == languageC.STRING) {
                 return new tempVar(tempFinalV.getvFloat(), languageC.STRING, row, column, id);
             } else if (tempFinalV.getdType().getNameData() == languageC.BOOLEAN) {
@@ -88,14 +90,12 @@ public class semanticManager {
             } else if ((tempVarFound.getdType().getNameData() == languageC.BOOLEAN) && (data.getDato().getCategory() == languageC.BOOLEAN)) {
                 tempVarFound.setvBool(data.getDato().isvBool());
                 addTemp3DirCodeOp();
-            } else if (((tempVarFound.getdType().getNameData() == languageC.INTEGER) || (tempVarFound.getdType().getNameData() == languageC.FLOAT)) && (data.getDato().getCategory() == languageC.DOUBLE_AUX)) {
-                if (tempVarFound.getdType().getNameData() == languageC.INTEGER) {
-                    tempVarFound.setvInteger((int) data.getDato().getvDouble());
-                    addTemp3DirCodeOp();
-                } else {
-                    tempVarFound.setvFloat((float) data.getDato().getvDouble());
-                    addTemp3DirCodeOp();
-                }
+            } else if ((tempVarFound.getdType().getNameData() == languageC.INTEGER) && (data.getDato().getCategory() == languageC.INTEGER)) {
+                tempVarFound.setvInteger(data.getDato().getvInteger());
+                addTemp3DirCodeOp();
+            } else if ((tempVarFound.getdType().getNameData() == languageC.FLOAT) && (data.getDato().getCategory() == languageC.FLOAT)) {
+                tempVarFound.setvFloat(data.getDato().getvFloat());
+                addTemp3DirCodeOp();
             } else {
                 errorAndPlace(languageC.AN_SEMANTICO, "No es compatible la variable " + data.getId() + " del tipo " + languageC.getDataTypeName(data.getDato().getCategory()) + " linea: " + row);
                 reset3DirLists();
@@ -123,14 +123,13 @@ public class semanticManager {
             finalVar tempVarFound = findVariable(data.getId());
             dataType tempType = findDType(dType);
             if ((tempVarFound == null) && (tempType != null) && (data.getDato().getCategory() != languageC.NO_TYPE_AUX)) {
-                if (((dType == languageC.INTEGER) || (dType == languageC.FLOAT)) && (data.getDato().getCategory() == languageC.DOUBLE_AUX)) {
-                    if (dType == languageC.INTEGER) {
-                        varList.add(new finalVar((int) data.getDato().getvDouble(), tempType, data.getId(), languageC.VARIABLE));
-                        addTemp3DirCodeOp();
-                    } else {
-                        varList.add(new finalVar((float) data.getDato().getvDouble(), tempType, data.getId(), languageC.VARIABLE));
-                        addTemp3DirCodeOp();
-                    }
+
+                if (dType == languageC.INTEGER) {
+                    varList.add(new finalVar(data.getId(), tempType, data.getDato().getvInteger(), languageC.VARIABLE));
+                    addTemp3DirCodeOp();
+                } else if (dType == languageC.FLOAT) {
+                    varList.add(new finalVar(data.getId(), tempType, data.getDato().getvFloat(), languageC.VARIABLE));
+                    addTemp3DirCodeOp();
                 } else if ((dType == languageC.BOOLEAN) && (data.getDato().getCategory() == languageC.BOOLEAN)) {
                     varList.add(new finalVar(data.getId(), tempType, data.getDato().isvBool(), languageC.VARIABLE));
                     addTemp3DirCodeOp();
@@ -143,25 +142,23 @@ public class semanticManager {
                     reset3DirLists();
                 }
             } else if ((tempVarFound == null) && (tempType != null) && (data.getDato().getCategory() == languageC.NO_TYPE_AUX)) {
-                if (((dType == languageC.INTEGER) || (dType == languageC.FLOAT))) {
-                    if (dType == languageC.INTEGER) {
-                        varList.add(new finalVar(0, tempType, data.getId(), languageC.INTEGER));
-                        addTemp3DirCodeOp();
-                        forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
-                        threeDirectionsCode.add(data.getId() + " = " + 0);
-                    } else {
-                        varList.add(new finalVar(0, tempType, data.getId(), languageC.FLOAT));
-                        addTemp3DirCodeOp();
-                        forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
-                        threeDirectionsCode.add(data.getId() + " = " + 0);
-                    }
+                if (dType == languageC.INTEGER) {
+                    varList.add(new finalVar(data.getId(), tempType, 0, languageC.VARIABLE));
+                    addTemp3DirCodeOp();
+                    forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
+                    threeDirectionsCode.add(data.getId() + " = " + 0);
+                } else if (dType == languageC.FLOAT) {
+                    varList.add(new finalVar(data.getId(), tempType, 0, languageC.VARIABLE));
+                    addTemp3DirCodeOp();
+                    forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
+                    threeDirectionsCode.add(data.getId() + " = " + 0);
                 } else if ((dType == languageC.BOOLEAN)) {
-                    varList.add(new finalVar(data.getId(), tempType, true, languageC.BOOLEAN));
+                    varList.add(new finalVar(data.getId(), tempType, true, languageC.VARIABLE));
                     addTemp3DirCodeOp();
                     forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, languageC.TRUE_STR));
                     threeDirectionsCode.add(data.getId() + " = " + true);
                 } else if ((dType == languageC.STRING)) {
-                    varList.add(new finalVar(data.getId(), tempType, "", languageC.STRING));
+                    varList.add(new finalVar(data.getId(), tempType, "", languageC.VARIABLE));
                     addTemp3DirCodeOp();
                     forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "."));
                     threeDirectionsCode.add(data.getId() + " = " + ".");
@@ -272,6 +269,7 @@ public class semanticManager {
 
     protected void addTemp3DirCodeOp() {
         threeDirectionsCode.addAll(operations.getTemp3dir());
+        forthDirCode.addAll(operations.getTemp4thdir());
         operations.resetTemp3VarList();
     }
 

@@ -13,8 +13,7 @@ import backEnd.Objects.tempVar;
  */
 public class cicleLable {
 
-    ifCicle ifCicleStr;
-    whileCicle whileCicleStr;
+    cicleStr ifCicleStr;
     tempVar operation;
     boolean cicleClosed;
     int cicleType;
@@ -26,12 +25,11 @@ public class cicleLable {
      * @param cicleType
      * @param operation
      */
-    public cicleLable(ifCicle ifCicleStr, int cicleType, tempVar operation) {
+    public cicleLable(cicleStr ifCicleStr, int cicleType, tempVar operation) {
         this.ifCicleStr = ifCicleStr;
         this.cicleType = cicleType;
         this.operation = operation;
         this.cicleClosed = false;
-        this.whileCicleStr = null;
     }
 
     /**
@@ -40,28 +38,19 @@ public class cicleLable {
      * @param whileCicleStr
      * @param cicleType
      */
-    public cicleLable(whileCicle whileCicleStr, int cicleType) {
-        this.whileCicleStr = whileCicleStr;
+    public cicleLable(cicleStr whileCicleStr, int cicleType) {
+        this.ifCicleStr = whileCicleStr;
         this.cicleType = cicleType;
         this.operation = null;
         this.cicleClosed = false;
-        this.ifCicleStr = null;
     }
 
-    public ifCicle getIfCicleStr() {
+    public cicleStr getIfCicleStr() {
         return ifCicleStr;
     }
 
-    public void setIfCicleStr(ifCicle ifCicleStr) {
+    public void setIfCicleStr(cicleStr ifCicleStr) {
         this.ifCicleStr = ifCicleStr;
-    }
-
-    public whileCicle getWhileCicleStr() {
-        return whileCicleStr;
-    }
-
-    public void setWhileCicleStr(whileCicle whileCicleStr) {
-        this.whileCicleStr = whileCicleStr;
     }
 
     public tempVar getOperation() {
