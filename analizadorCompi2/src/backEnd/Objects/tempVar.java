@@ -14,6 +14,23 @@ public class tempVar extends Variable {
     int row;
     int column;
     String id3Dir;
+    tempVar right;
+    tempVar left;
+    int operation;
+    andOrStr andOrObject;
+
+    /**
+     * This constructor take care of the OR and AND logic operation
+     *
+     * @param operation
+     * @param andOrObject
+     * @param category
+     */
+    public tempVar(andOrStr andOrObject, int operation, int category) {
+        super(category);
+        this.operation = operation;
+        this.andOrObject = andOrObject;
+    }
 
     /**
      * This variable is to do the arithmetic calculus storing the Integer values
@@ -28,6 +45,9 @@ public class tempVar extends Variable {
         this.row = row;
         this.column = column;
         this.id3Dir = "";
+        this.right = null;
+        this.left = null;
+        this.andOrObject = null;
     }
 
     /**
@@ -43,6 +63,9 @@ public class tempVar extends Variable {
         this.row = row;
         this.column = column;
         this.id3Dir = "";
+        this.right = null;
+        this.left = null;
+        this.andOrObject = null;
     }
 
     /**
@@ -58,6 +81,9 @@ public class tempVar extends Variable {
         this.row = row;
         this.column = column;
         this.id3Dir = "";
+        this.right = null;
+        this.left = null;
+        this.andOrObject = null;
     }
 
     /**
@@ -73,6 +99,9 @@ public class tempVar extends Variable {
         this.row = row;
         this.column = column;
         this.id3Dir = "";
+        this.right = null;
+        this.left = null;
+        this.andOrObject = null;
     }
 
     /**
@@ -89,6 +118,9 @@ public class tempVar extends Variable {
         this.row = row;
         this.column = column;
         this.id3Dir = id3Dir;
+        this.right = null;
+        this.left = null;
+        this.andOrObject = null;
     }
 
     /**
@@ -105,6 +137,9 @@ public class tempVar extends Variable {
         this.row = row;
         this.column = column;
         this.id3Dir = id3Dir;
+        this.right = null;
+        this.left = null;
+        this.andOrObject = null;
     }
 
     /**
@@ -121,6 +156,9 @@ public class tempVar extends Variable {
         this.row = row;
         this.column = column;
         this.id3Dir = id3Dir;
+        this.right = null;
+        this.left = null;
+        this.andOrObject = null;
     }
 
     /**
@@ -131,18 +169,59 @@ public class tempVar extends Variable {
      * @param row
      * @param column
      * @param id3Dir
+     * @param left
+     * @param right
      */
-    public tempVar(boolean vBool, int category, int row, int column, String id3Dir) {
+    public tempVar(boolean vBool, int category, int row, int column, String id3Dir, tempVar left, tempVar right, int operation) {
         super(vBool, category);
         this.row = row;
         this.column = column;
         this.id3Dir = id3Dir;
+        this.right = right;
+        this.left = left;
+        this.operation = operation;
+        this.andOrObject = null;
     }
 
     public tempVar(int category, int row, int column) {
         super(0, 0, "", true, category);
         this.row = row;
         this.column = column;
+        this.right = null;
+        this.left = null;
+        this.andOrObject = null;
+    }
+
+    public int getOperation() {
+        return operation;
+    }
+
+    public void setOperation(int operation) {
+        this.operation = operation;
+    }
+
+    public andOrStr getAndOrObject() {
+        return andOrObject;
+    }
+
+    public void setAndOrObject(andOrStr andOrObject) {
+        this.andOrObject = andOrObject;
+    }
+
+    public tempVar getRight() {
+        return right;
+    }
+
+    public void setRight(tempVar right) {
+        this.right = right;
+    }
+
+    public tempVar getLeft() {
+        return left;
+    }
+
+    public void setLeft(tempVar left) {
+        this.left = left;
     }
 
     public int getRow() {

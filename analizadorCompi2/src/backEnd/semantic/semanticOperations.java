@@ -21,6 +21,7 @@ public class semanticOperations {
     private LinkedList<String> temp3dir = new LinkedList<>();
     private LinkedList<cuarteta> temp4thdir = new LinkedList<>();
     private int contador = 0;
+    private int boolCont = 0;
     semanticManager semanticM;
 
     public semanticOperations(semanticManager semanticM) {
@@ -141,46 +142,46 @@ public class semanticOperations {
 
     private tempVar logicOp(String operator, tempVar dato1, tempVar dato2, int row, int column) throws InputsVaciosException {
         if (operator.equals(constL.MAYOR_Q)) {
-            if ((dato1.getCategory() == constL.DOUBLE_AUX) && (dato2.getCategory() == constL.DOUBLE_AUX)) {
-                return new tempVar(dato1.getvDouble() > dato2.getvDouble(), constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.MAYOR_Q, constL.MAYOR_Q_ID));
+            if (((dato1.getCategory() == constL.INTEGER) && (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
+                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.MAYOR_Q, constL.MAYOR_Q_ID), dato1, dato2, constL.MAYOR_Q_ID);
             } else {
-                catchIncorrectValues(operator, dato1, dato2, row, column, constL.DOUBLE_AUX, constL.DOUBLE_AUX);
+                catchIncorrectValues(operator, dato1, dato2, row, column, constL.FLOAT, constL.FLOAT);
                 return null;
             }
         } else if (operator.equals(constL.MENOR_Q)) {
-            if ((dato1.getCategory() == constL.DOUBLE_AUX) && (dato2.getCategory() == constL.DOUBLE_AUX)) {
-                return new tempVar(dato1.getvDouble() < dato2.getvDouble(), constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.MENOR_Q, constL.MENOR_Q_ID));
+            if (((dato1.getCategory() == constL.INTEGER) && (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
+                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.MENOR_Q, constL.MENOR_Q_ID), dato1, dato2, constL.MENOR_Q_ID);
             } else {
-                catchIncorrectValues(operator, dato1, dato2, row, column, constL.DOUBLE_AUX, constL.DOUBLE_AUX);
+                catchIncorrectValues(operator, dato1, dato2, row, column, constL.FLOAT, constL.FLOAT);
                 return null;
             }
         } else if (operator.equals(constL.IGUAL)) {
-            if ((dato1.getCategory() == constL.DOUBLE_AUX) && (dato2.getCategory() == constL.DOUBLE_AUX)) {
-                return new tempVar(dato1.getvDouble() == dato2.getvDouble(), constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.IGUAL, constL.IGUAL_ID));
+            if (((dato1.getCategory() == constL.INTEGER) && (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
+                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.IGUAL, constL.IGUAL_ID), dato1, dato2, constL.IGUAL_ID);
             } else if ((dato1.getCategory() == constL.BOOLEAN) && (dato2.getCategory() == constL.BOOLEAN)) {
-                return new tempVar(dato1.isvBool() == dato2.isvBool(), constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.IGUAL, constL.IGUAL_ID));
+                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.IGUAL, constL.IGUAL_ID), dato1, dato2, constL.IGUAL_ID);
             } else if ((dato1.getCategory() == constL.STRING) && (dato2.getCategory() == constL.STRING)) {
-                return new tempVar(dato1.getvString().equals(dato2.getvString()), constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.IGUAL, constL.IGUAL_ID));
+                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.IGUAL, constL.IGUAL_ID), dato1, dato2, constL.IGUAL_ID);
             } else {
-                catchIncorrectValues(operator, dato1, dato2, row, column, constL.DOUBLE_AUX, constL.DOUBLE_AUX);
+                catchIncorrectValues(operator, dato1, dato2, row, column, constL.FLOAT, constL.FLOAT);
                 return null;
             }
 
         } else if (operator.equals(constL.DIF)) {
-            if ((dato1.getCategory() == constL.DOUBLE_AUX) && (dato2.getCategory() == constL.DOUBLE_AUX)) {
-                return new tempVar(dato1.getvDouble() != dato2.getvDouble(), constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.DIF, constL.DIF_ID));
+            if (((dato1.getCategory() == constL.INTEGER) && (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
+                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.DIF, constL.DIF_ID), dato1, dato2, constL.DIF_ID);
             } else if ((dato1.getCategory() == constL.BOOLEAN) && (dato2.getCategory() == constL.BOOLEAN)) {
-                return new tempVar(dato1.isvBool() != dato2.isvBool(), constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.DIF, constL.DIF_ID));
+                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.DIF, constL.DIF_ID), dato1, dato2, constL.DIF_ID);
             } else if ((dato1.getCategory() == constL.STRING) && (dato2.getCategory() == constL.STRING)) {
-                return new tempVar(!dato1.getvString().equals(dato2.getvString()), constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.DIF, constL.DIF_ID));
+                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.DIF, constL.DIF_ID), dato1, dato2, constL.DIF_ID);
             } else {
-                catchIncorrectValues(operator, dato1, dato2, row, column, constL.DOUBLE_AUX, constL.DOUBLE_AUX);
+                catchIncorrectValues(operator, dato1, dato2, row, column, constL.FLOAT, constL.FLOAT);
                 return null;
             }
 
         } else if (operator.equals(constL.AND)) {
             if ((dato1.getCategory() == constL.BOOLEAN) && (dato2.getCategory() == constL.BOOLEAN)) {
-                return new tempVar(dato1.isvBool() && dato2.isvBool(), constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.AND, constL.AND_ID));
+                return andStr(dato1, dato2, constL.AND_ID);
             } else {
                 catchIncorrectValues(operator, dato1, dato2, row, column, constL.BOOLEAN, constL.BOOLEAN);
                 return null;
@@ -188,7 +189,7 @@ public class semanticOperations {
 
         } else if (operator.equals(constL.OR)) {
             if ((dato1.getCategory() == constL.BOOLEAN) && (dato2.getCategory() == constL.BOOLEAN)) {
-                return new tempVar(dato1.isvBool() || dato2.isvBool(), constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.OR, constL.OR_ID));
+                return orStr(dato1, dato2, constL.OR_ID);
             } else {
                 catchIncorrectValues(operator, dato1, dato2, row, column, constL.BOOLEAN, constL.BOOLEAN);
                 return null;
@@ -297,6 +298,104 @@ public class semanticOperations {
     }
 
     /**
+     * This method create the structure for the or option at an logic operation
+     *
+     * this method use recursive way of the syntactic analyzer to create the OR
+     * structure
+     *
+     * @param dato1
+     * @param dato2
+     * @param operation
+     * @return
+     * @throws InputsVaciosException
+     */
+    protected tempVar orStr(tempVar dato1, tempVar dato2, int operation) throws InputsVaciosException {
+        LinkedList<cuarteta> listTemp = new LinkedList<>();
+        if ((dato1.getOperation() != constL.AND_ID || dato1.getOperation() != constL.OR_ID) && (dato2.getOperation() != constL.AND_ID || dato2.getOperation() != constL.OR_ID)) {
+            listTemp.add(new cuarteta(null, constL.getID_Value(dato1.getLeft()) + " " + constL.getOpType(dato1.getOperation()) + " " + constL.getID_Value(dato1.getRight()), constL.IF_ID, constL.LOGIC_LABLE + boolCont));
+            listTemp.add(new cuarteta(null, constL.getID_Value(dato2.getLeft()) + " " + constL.getOpType(dato2.getOperation()) + " " + constL.getID_Value(dato2.getRight()), constL.IF_ID, constL.LOGIC_LABLE + boolCont));
+            listTemp.add(new cuarteta(constL.LOGIC_LABLE + (boolCont + 1), constL.GOTO_STR_ID));
+            tempVar varT = new tempVar(new andOrStr(listTemp, constL.LOGIC_LABLE + boolCont, constL.LOGIC_LABLE + (boolCont + 1)), operation, constL.BOOLEAN);
+            boolCont += 2;
+            return varT;
+        } else if ((dato1.getOperation() == constL.AND_ID || dato1.getOperation() == constL.OR_ID) && (dato2.getOperation() != constL.AND_ID || dato2.getOperation() != constL.OR_ID)) {
+            listTemp.addAll(dato1.getAndOrObject().getStructure());
+            listTemp.removeLast();
+            listTemp.add(new cuarteta(dato1.getAndOrObject().getFalseFlag(), constL.FLAG_STR_ID));
+            listTemp.add(new cuarteta(null, constL.getID_Value(dato2.getLeft()) + " " + constL.getOpType(dato2.getOperation()) + " " + constL.getID_Value(dato2.getRight()), constL.IF_ID, dato1.getAndOrObject().getTrueFlag()));
+            listTemp.add(new cuarteta(constL.LOGIC_LABLE + boolCont, constL.GOTO_STR_ID));
+            tempVar varT = new tempVar(new andOrStr(listTemp, dato1.getAndOrObject().getTrueFlag(), constL.LOGIC_LABLE + boolCont), operation, constL.BOOLEAN);
+            boolCont++;
+            return varT;
+        } else if ((dato1.getOperation() != constL.AND_ID || dato1.getOperation() != constL.OR_ID) && (dato2.getOperation() == constL.AND_ID || dato2.getOperation() == constL.OR_ID)) {
+            listTemp.add(new cuarteta(null, constL.getID_Value(dato1.getLeft()) + " " + constL.getOpType(dato1.getOperation()) + " " + constL.getID_Value(dato1.getRight()), constL.IF_ID, constL.LOGIC_LABLE + boolCont));
+            listTemp.addAll(dato2.getAndOrObject().getStructure());
+            constL.changeLables(listTemp, dato2.getAndOrObject().getTrueFlag(), constL.LOGIC_LABLE + boolCont);
+            tempVar varT = new tempVar(new andOrStr(listTemp, constL.LOGIC_LABLE + boolCont, dato2.getAndOrObject().getFalseFlag()), operation, constL.BOOLEAN);
+            boolCont++;
+            return varT;
+        } else {
+            listTemp.addAll(dato1.getAndOrObject().getStructure());
+            listTemp.removeLast();
+            listTemp.add(new cuarteta(dato1.getAndOrObject().getFalseFlag(), constL.FLAG_STR_ID));
+            listTemp.addAll(dato2.getAndOrObject().getStructure());
+            constL.changeLables(listTemp, dato2.getAndOrObject().getTrueFlag(), dato1.getAndOrObject().getTrueFlag());
+            tempVar varT = new tempVar(new andOrStr(listTemp, dato1.getAndOrObject().getTrueFlag(), dato2.getAndOrObject().getFalseFlag()), operation, constL.BOOLEAN);
+            return varT;
+        }
+    }
+
+    /**
+     * This method create the structure for the or option at an logic operation
+     *
+     * this method use recursive way of the syntactic analyzer to create the AND
+     * structure
+     *
+     * @param dato1
+     * @param dato2
+     * @param operation
+     * @return
+     * @throws InputsVaciosException
+     */
+    protected tempVar andStr(tempVar dato1, tempVar dato2, int operation) throws InputsVaciosException {
+        LinkedList<cuarteta> listTemp = new LinkedList<>();
+        if ((dato1.getOperation() != constL.AND_ID || dato1.getOperation() != constL.OR_ID) && (dato2.getOperation() != constL.AND_ID || dato2.getOperation() != constL.OR_ID)) {
+            listTemp.add(new cuarteta(null, constL.getID_Value(dato1.getLeft()) + " " + constL.getOpType(dato1.getOperation()) + " " + constL.getID_Value(dato1.getRight()), constL.IF_ID, constL.LOGIC_LABLE + boolCont));
+            listTemp.add(new cuarteta(constL.LOGIC_LABLE + (boolCont + 1), constL.GOTO_STR_ID));
+            listTemp.add(new cuarteta(constL.LOGIC_LABLE + boolCont, constL.FLAG_STR_ID));
+            listTemp.add(new cuarteta(null, constL.getID_Value(dato2.getLeft()) + " " + constL.getOpType(dato2.getOperation()) + " " + constL.getID_Value(dato2.getRight()), constL.IF_ID, constL.LOGIC_LABLE + (boolCont + 2)));
+            listTemp.add(new cuarteta(constL.LOGIC_LABLE + (boolCont + 1), constL.GOTO_STR_ID));
+            tempVar varT = new tempVar(new andOrStr(listTemp, constL.LOGIC_LABLE + (boolCont + 2), constL.LOGIC_LABLE + (boolCont + 1)), operation, constL.BOOLEAN);
+            boolCont += 3;
+            return varT;
+        } else if ((dato1.getOperation() == constL.AND_ID || dato1.getOperation() == constL.OR_ID) && (dato2.getOperation() != constL.AND_ID || dato2.getOperation() != constL.OR_ID)) {
+            listTemp.addAll(dato1.getAndOrObject().getStructure());
+            listTemp.add(new cuarteta(dato1.getAndOrObject().getTrueFlag(), constL.FLAG_STR_ID));
+            listTemp.add(new cuarteta(null, constL.getID_Value(dato2.getLeft()) + " " + constL.getOpType(dato2.getOperation()) + " " + constL.getID_Value(dato2.getRight()), constL.IF_ID, constL.LOGIC_LABLE + boolCont));
+            listTemp.add(new cuarteta(dato1.getAndOrObject().getFalseFlag(), constL.GOTO_STR_ID));
+            tempVar varT = new tempVar(new andOrStr(listTemp, constL.LOGIC_LABLE + boolCont, dato1.getAndOrObject().getFalseFlag()), operation, constL.BOOLEAN);
+            boolCont++;
+            return varT;
+        } else if ((dato1.getOperation() != constL.AND_ID || dato1.getOperation() != constL.OR_ID) && (dato2.getOperation() == constL.AND_ID || dato2.getOperation() == constL.OR_ID)) {
+            listTemp.add(new cuarteta(null, constL.getID_Value(dato1.getLeft()) + " " + constL.getOpType(dato1.getOperation()) + " " + constL.getID_Value(dato1.getRight()), constL.IF_ID, constL.LOGIC_LABLE + boolCont));
+            listTemp.add(new cuarteta(constL.LOGIC_LABLE + (boolCont + 1), constL.GOTO_STR_ID));
+            listTemp.add(new cuarteta(constL.LOGIC_LABLE + boolCont, constL.FLAG_STR_ID));
+            listTemp.addAll(dato2.getAndOrObject().getStructure());
+            constL.changeLables(listTemp, dato2.getAndOrObject().getFalseFlag(), constL.LOGIC_LABLE + (boolCont + 1));
+            tempVar varT = new tempVar(new andOrStr(listTemp, dato2.getAndOrObject().getTrueFlag(), constL.LOGIC_LABLE + (boolCont + 1)), operation, constL.BOOLEAN);
+            boolCont += 2;
+            return varT;
+        } else {
+            listTemp.addAll(dato1.getAndOrObject().getStructure());
+            listTemp.add(new cuarteta(dato1.getAndOrObject().getTrueFlag(), constL.FLAG_STR_ID));
+            listTemp.addAll(dato2.getAndOrObject().getStructure());
+            constL.changeLables(listTemp, dato2.getAndOrObject().getFalseFlag(), dato1.getAndOrObject().getFalseFlag());
+            tempVar varT = new tempVar(new andOrStr(listTemp, dato2.getAndOrObject().getTrueFlag(), dato1.getAndOrObject().getFalseFlag()), operation, constL.BOOLEAN);
+            return varT;
+        }
+    }
+
+    /**
      * just add the last step of the 3 directions code 'x = 2'
      *
      * @param id1
@@ -322,6 +421,19 @@ public class semanticOperations {
      */
     public void resetContador() {
         contador = 0;
+        boolCont = 0;
+    }
+
+    public void addBoolCont() {
+        boolCont++;
+    }
+
+    public int getBoolCont() {
+        return boolCont;
+    }
+
+    public void setBoolCont(int boolCont) {
+        this.boolCont = boolCont;
     }
 
     public LinkedList<String> getTemp3dir() {

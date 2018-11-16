@@ -19,8 +19,6 @@ import java.util.LinkedList;
  */
 public class semanticManager {
 
-    boolean errorFound = false;
-
     languageConstants languageC = new languageConstants();
     LinkedList<dataType> typeList = new LinkedList<>();
     LinkedList<finalVar> varList = new LinkedList<>();
@@ -89,7 +87,19 @@ public class semanticManager {
                 addTemp3DirCodeOp();
             } else if ((tempVarFound.getdType().getNameData() == languageC.BOOLEAN) && (data.getDato().getCategory() == languageC.BOOLEAN)) {
                 tempVarFound.setvBool(data.getDato().isvBool());
+                LinkedList<cuarteta> listTemp = new LinkedList<>();
                 addTemp3DirCodeOp();
+                listTemp.addAll(data.getDato().getAndOrObject().getStructure());
+                listTemp.add(new cuarteta(data.getDato().getAndOrObject().getTrueFlag(), languageC.FLAG_STR_ID));
+                listTemp.add(new cuarteta(tempVarFound.getdType(), data.getId(), languageC.ASIGNAR_ID, "1"));
+                listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.GOTO_STR_ID));
+                listTemp.add(new cuarteta(data.getDato().getAndOrObject().getFalseFlag(), languageC.FLAG_STR_ID));
+                listTemp.add(new cuarteta(tempVarFound.getdType(), data.getId(), languageC.ASIGNAR_ID, "0"));
+                listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.FLAG_STR_ID));
+                operations.addBoolCont();
+                forthDirCode.addAll(listTemp);
+                operations.resetTemp3VarList();
+
             } else if ((tempVarFound.getdType().getNameData() == languageC.INTEGER) && (data.getDato().getCategory() == languageC.INTEGER)) {
                 tempVarFound.setvInteger(data.getDato().getvInteger());
                 addTemp3DirCodeOp();
@@ -132,7 +142,17 @@ public class semanticManager {
                     addTemp3DirCodeOp();
                 } else if ((dType == languageC.BOOLEAN) && (data.getDato().getCategory() == languageC.BOOLEAN)) {
                     varList.add(new finalVar(data.getId(), tempType, data.getDato().isvBool(), languageC.VARIABLE));
+                    LinkedList<cuarteta> listTemp = new LinkedList<>();
                     addTemp3DirCodeOp();
+                    listTemp.addAll(data.getDato().getAndOrObject().getStructure());
+                    listTemp.add(new cuarteta(data.getDato().getAndOrObject().getTrueFlag(), languageC.FLAG_STR_ID));
+                    listTemp.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "1"));
+                    listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.GOTO_STR_ID));
+                    listTemp.add(new cuarteta(data.getDato().getAndOrObject().getFalseFlag(), languageC.FLAG_STR_ID));
+                    listTemp.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
+                    listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.FLAG_STR_ID));
+                    forthDirCode.addAll(listTemp);
+                    operations.resetTemp3VarList();
                 } else if ((dType == languageC.STRING) && (data.getDato().getCategory() == languageC.STRING)) {
                     varList.add(new finalVar(data.getId(), tempType, data.getDato().getvString(), languageC.VARIABLE));
                     addTemp3DirCodeOp();
@@ -156,7 +176,7 @@ public class semanticManager {
                     varList.add(new finalVar(data.getId(), tempType, true, languageC.VARIABLE));
                     addTemp3DirCodeOp();
                     forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, languageC.TRUE_STR));
-                    threeDirectionsCode.add(data.getId() + " = " + true);
+                    threeDirectionsCode.add(data.getId() + " = " + 1);
                 } else if ((dType == languageC.STRING)) {
                     varList.add(new finalVar(data.getId(), tempType, "", languageC.VARIABLE));
                     addTemp3DirCodeOp();
@@ -191,7 +211,7 @@ public class semanticManager {
      * @throws IOException
      */
     public void create3DirCodeDoc() throws IOException {
-        if (!errorFound) {
+        if (errors.isEmpty()) {
             files.guardarArchivo("3DirectionsCode.txt", text3DirOut());
         }
         resetAll();
@@ -203,7 +223,7 @@ public class semanticManager {
      * @return
      */
     public String getVars() {
-        if (!errorFound) {
+        if (errors.isEmpty()) {
             String vars = "Variables:\n";
             for (finalVar var : varList) {
                 vars += (var.textVar() + "\n");
@@ -246,10 +266,9 @@ public class semanticManager {
      */
     public void errorAndPlace(int analyzer, String problem) {
         errors.add(new errorObject(analyzer, problem));
-        errorFound = true;
     }
 
-    private finalVar findVariable(String id) {
+    protected finalVar findVariable(String id) {
         for (finalVar varList1 : varList) {
             if (varList1.getIdVar().equals(id)) {
                 return varList1;
@@ -297,6 +316,10 @@ public class semanticManager {
         forthDirCode.add(new cuarteta(null, operator, operation, operando_1));
     }
 
+    public void addAllTemp4DirCode(LinkedList<cuarteta> forthD) {
+        forthDirCode.addAll(forthD);
+    }
+
     /**
      * This method is to set "FLAGS" like
      *
@@ -331,15 +354,6 @@ public class semanticManager {
         operations.resetTemp3VarList();
         operations.resetContador();
         functions.resetAll();
-        errorFound = false;
         errors.clear();
-    }
-
-    public boolean isErrorFound() {
-        return errorFound;
-    }
-
-    public void setErrorFound(boolean errorFound) {
-        this.errorFound = errorFound;
     }
 }

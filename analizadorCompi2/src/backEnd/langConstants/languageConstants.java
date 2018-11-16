@@ -5,8 +5,10 @@
  */
 package backEnd.langConstants;
 
+import backEnd.Objects.finalStr.cuarteta;
 import backEnd.Objects.tempVar;
 import backEnd.exceptions.InputsVaciosException;
+import java.util.LinkedList;
 
 /**
  *
@@ -59,6 +61,10 @@ public class languageConstants {
     public final String WHILE_LABLE = "lw";
     public final String else_LABLE = "";
 
+    /*Lables for logic operations*/
+    public final String LOGIC_LABLE = "lb";
+    public final String LOGIC_FLAG_LABLE = "b";
+
     /*The front name of the variables*/
     public final String VARIABLE_LABLE = "";
 
@@ -100,21 +106,21 @@ public class languageConstants {
     *NOTE: the logic operations are going to be taken as
     *default that are going to be inside of an IF function
      */
-    public int MAS_ID = 4;
-    public int MENOS_ID = 5;
-    public int POR_ID = 6;
-    public int DIV_ID = 7;
-    public int MAYOR_Q_ID = 8;
-    public int MENOR_Q_ID = 9;
-    public int IGUAL_ID = 10;
-    public int DIF_ID = 11;
-    public int AND_ID = 12;
-    public int OR_ID = 13;
-    public int ASIGNAR_ID = 14;
-    public int ARRAY_ID = 15;
-    public int TRUE_STR_ID = 16;
-    public int FALSE_STR_ID = 17;
-    public int _ID = 0;
+    public final int MAS_ID = 4;
+    public final int MENOS_ID = 5;
+    public final int POR_ID = 6;
+    public final int DIV_ID = 7;
+    public final int MAYOR_Q_ID = 8;
+    public final int MENOR_Q_ID = 9;
+    public final int IGUAL_ID = 10;
+    public final int DIF_ID = 11;
+    public final int AND_ID = 12;
+    public final int OR_ID = 13;
+    public final int ASIGNAR_ID = 14;
+    public final int ARRAY_ID = 15;
+    public final int TRUE_STR_ID = 16;
+    public final int FALSE_STR_ID = 17;
+    public final int _ID = 0;
 
     public boolean stringIsEmpty(String textoIn) {
         if (textoIn != null) {
@@ -137,8 +143,10 @@ public class languageConstants {
         switch (dato.getCategory()) {
             case BOOLEAN:
                 return String.valueOf(dato.isvBool());
-            case DOUBLE_AUX:
-                return String.valueOf(dato.getvDouble());
+            case FLOAT:
+                return String.valueOf(dato.getvFloat());
+            case INTEGER:
+                return String.valueOf(dato.getvInteger());
             case STRING:
                 return dato.getvString();
             default:
@@ -158,6 +166,45 @@ public class languageConstants {
                 return FLOAT_NAME;
             default:
                 return null;
+        }
+    }
+
+    public String getOpType(int codOp) {
+        switch (codOp) {
+            case MAYOR_Q_ID:
+                return MAYOR_Q;
+            case MENOR_Q_ID:
+                return MENOR_Q;
+            case IGUAL_ID:
+                return IGUAL;
+            case DIF_ID:
+                return DIF;
+            default:
+                return null;
+        }
+    }
+
+    public String getID_Value(tempVar dato) throws InputsVaciosException {
+        if (stringIsEmpty(dato.getId3Dir())) {
+            return valueParsed(dato);
+        } else {
+            return dato.getId3Dir();
+        }
+    }
+
+    public void changeLables(LinkedList<cuarteta> structure, String oldLable, String newLable) {
+        if (!structure.isEmpty()) {
+            for (int i = 0; i < structure.size(); i++) {
+                if (structure.get(i).getOperation() == IF_ID) {
+                    if (structure.get(i).getOperando_1().equalsIgnoreCase(oldLable)) {
+                        structure.get(i).setOperando_1(newLable);
+                    }
+                } else if (structure.get(i).getOperation() == GOTO_STR_ID) {
+                    if (structure.get(i).getOperator().equalsIgnoreCase(oldLable)) {
+                        structure.get(i).setOperator(newLable);
+                    }
+                }
+            }
         }
     }
 }

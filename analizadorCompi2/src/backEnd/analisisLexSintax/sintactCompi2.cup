@@ -26,7 +26,6 @@ parser code {:
 		System.out.println(message);
         semanticM.errorAndPlace(lanC.AN_SINTACTICO, message);
 		System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		semanticM.setErrorFound(true);
 	}
 :}
 
@@ -104,12 +103,12 @@ OPERACION		::=	OPERACION:e1 Mas:e3 OPERACION:e2 			{: RESULT = semanticM.operati
 					| OPERACION:e1 Or:e3 OPERACION:e2 			{: RESULT = semanticM.operations.operation(lanC.OR, 	e1, e2, e3left, e3right); :}
 					| OPERACION:e1 And:e3 OPERACION:e2			{: RESULT = semanticM.operations.operation(lanC.AND, 	e1, e2, e3left, e3right); :}
 					| ParAbierto OPERACION:e ParCerrado			{: RESULT = e; :}
-					| Menos Entero:e							{: RESULT = new tempVar(-Double.parseDouble(e),lanC.INTEGER,eleft, eright); :}
-					| Menos Decimal:e							{: RESULT = new tempVar(-Double.parseDouble(e),lanC.FLOAT,	eleft, eright); :}
-					| Entero:e									{: RESULT = new tempVar(Double.parseDouble(e), lanC.INTEGER,eleft, eright); :}
-					| Decimal:e									{: RESULT = new tempVar(Double.parseDouble(e), lanC.FLOAT,	eleft, eright); :}
-					| Booleano:e 								{: RESULT = new tempVar(Boolean.valueOf(e),    lanC.BOOLEAN,eleft, eright); :}
-					| Cadena:e 		 							{: RESULT = new tempVar(lanC.clearString(e),   lanC.STRING,	eleft, eright); :}
+					| Menos Entero:e							{: RESULT = new tempVar(-Integer.getInteger(e),	lanC.INTEGER,	eleft, eright); :}
+					| Menos Decimal:e							{: RESULT = new tempVar(-Float.valueOf(e), 		lanC.FLOAT, 	eleft, eright); :}
+					| Entero:e									{: RESULT = new tempVar(-Integer.getInteger(e), lanC.INTEGER, 	eleft, eright); :}
+					| Decimal:e									{: RESULT = new tempVar(Float.valueOf(e), 		lanC.FLOAT, 	eleft, eright); :}
+					| Booleano:e 								{: RESULT = new tempVar(Boolean.valueOf(e),    	lanC.BOOLEAN,	eleft, eright); :}
+					| Cadena:e 		 							{: RESULT = new tempVar(lanC.clearString(e),   	lanC.STRING,	eleft, eright); :}
 					| Identificador:e 							{: RESULT = semanticM.getTempVarFromList(e, eleft, eright); :}
 					;
 
@@ -121,7 +120,7 @@ IF_ELSE_FUNCION	::= IF_ELSE:e1 							{: semanticM.functions.setJumpFlag(e1); :}
 IF_ELSE 		::= IF_ELSE:e4 NamElse NamIf ParAbierto 
 					  OPERACION:e1 ParCerrado CorAbierto:e2 				{: RESULT = semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right, e4); :}
 					  MAIN_BODY CorCerrado:e3 								{: semanticM.functions.closeIfCycle(e3left, e3right); :}
-					| NamIf ParAbierto OPERACION:e1 ParCerrado CorAbierto:e2 {:RESULT = semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right, null);:}
+					| NamIf ParAbierto OPERACION:e1 ParCerrado CorAbierto:e2 {: RESULT = semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right,null); :}
 					  MAIN_BODY CorCerrado:e3 								{: semanticM.functions.closeIfCycle(e3left, e3right); :}
 					;
 /*

@@ -5,6 +5,7 @@
  */
 package backEnd.semantic;
 
+import backEnd.Objects.finalStr.cuarteta;
 import backEnd.Objects.funtion.*;
 import backEnd.Objects.tempVar;
 import backEnd.langConstants.languageConstants;
@@ -66,9 +67,19 @@ public class semanticFunctions {
                 semanticM.addTemp3DirCodeFuntion(constL.GOTO_STR + " " + constL.IF_LABLE + "" + (ifNumber + 1));
                 semanticM.addTemp3DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber) + "" + constL.FLAG_STR);
 
-                semanticM.addTemp4DirCodeFuntion(operator.getId3Dir(), constL.IF_ID, constL.IF_LABLE + "" + ifNumber);
-                semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (ifNumber + 1)), constL.GOTO_STR_ID);
-                semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber), constL.FLAG_STR_ID);
+                LinkedList<cuarteta> listTemp = new LinkedList<>();
+                listTemp.addAll(operator.getAndOrObject().getStructure());
+                listTemp.add(new cuarteta(operator.getAndOrObject().getTrueFlag(), constL.FLAG_STR_ID));
+                listTemp.add(new cuarteta(semanticM.findDType(operator.getCategory()), constL.IF_LABLE + ifNumber, constL.ASIGNAR_ID, "1"));
+                listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.GOTO_STR_ID));
+                listTemp.add(new cuarteta(operator.getAndOrObject().getFalseFlag(), constL.FLAG_STR_ID));
+                listTemp.add(new cuarteta(semanticM.findDType(operator.getCategory()), constL.IF_LABLE + ifNumber, constL.ASIGNAR_ID, "0"));
+                listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.FLAG_STR_ID));
+                semanticM.addAllTemp4DirCode(listTemp);
+                semanticM.operations.addBoolCont();
+                semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + ifNumber + " " + constL.IGUAL + " 1", constL.IF_ID, constL.IF_LABLE + "" + (ifNumber + 1));
+                semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (ifNumber + 2)), constL.GOTO_STR_ID);
+                semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber + 1), constL.FLAG_STR_ID);
 
                 ifNumber += 3;
                 return tempFlag;
@@ -82,11 +93,21 @@ public class semanticFunctions {
                 semanticM.addTemp3DirCodeFuntion(constL.GOTO_STR + " " + constL.IF_LABLE + "" + (ifNumber + 1));
                 semanticM.addTemp3DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber) + "" + constL.FLAG_STR);
 
-                semanticM.addTemp4DirCodeFuntion(operator.getId3Dir(), constL.IF_ID, constL.IF_LABLE + "" + ifNumber);
-                semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (ifNumber + 1)), constL.GOTO_STR_ID);
-                semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber), constL.FLAG_STR_ID);
+                LinkedList<cuarteta> listTemp = new LinkedList<>();
+                listTemp.addAll(operator.getAndOrObject().getStructure());
+                listTemp.add(new cuarteta(operator.getAndOrObject().getTrueFlag(), constL.FLAG_STR_ID));
+                listTemp.add(new cuarteta(semanticM.findDType(operator.getCategory()), constL.IF_LABLE + ifNumber, constL.ASIGNAR_ID, "1"));
+                listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.GOTO_STR_ID));
+                listTemp.add(new cuarteta(operator.getAndOrObject().getFalseFlag(), constL.FLAG_STR_ID));
+                listTemp.add(new cuarteta(semanticM.findDType(operator.getCategory()), constL.IF_LABLE + ifNumber, constL.ASIGNAR_ID, "0"));
+                listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.FLAG_STR_ID));
+                semanticM.addAllTemp4DirCode(listTemp);
+                semanticM.operations.addBoolCont();
+                semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + ifNumber + " " + constL.IGUAL + " 1", constL.IF_ID, constL.IF_LABLE + "" + (ifNumber + 1));
+                semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (ifNumber + 2)), constL.GOTO_STR_ID);
+                semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber + 1), constL.FLAG_STR_ID);
 
-                ifNumber += 2;
+                ifNumber += 3;
                 return returnFlag;
             }
         }
