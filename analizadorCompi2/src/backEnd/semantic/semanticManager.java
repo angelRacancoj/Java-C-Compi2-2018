@@ -219,7 +219,6 @@ public class semanticManager {
         if (errors.isEmpty()) {
             files.guardarArchivo("3DirectionsCode.txt", text3DirOut());
         }
-        resetAll();
     }
 
     /**

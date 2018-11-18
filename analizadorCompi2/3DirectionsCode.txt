@@ -1,12 +1,112 @@
-x = 9.0
-y = 8.0
-d0 = x == y
-d1 = 3.0 < 5.0
-d2 = d0 && d1
-
-if (d2) goto lf0
+null
+null
+null
+null
+null
+null
+null
+null
+null
+null
+0 = 2 * 4
+1 = 0 + 5
+null
+null
+null
+null
+null
+null
+lw0:
+if(f < y) goto lb5
+if(x > h) goto lb3
+goto lb4
+lb3:
+if(a < b) goto lb0
+goto lb4
+lb0:
+if(a == x) goto lb5
+goto lb4
+lb5:
+if(y < x) goto lb6
+goto lb4
+lb6:
+if(x < z) goto lb8
+goto lb4
+lb8:
+null
+goto lb9
+lb4:
+null
+lb9:
+if(lf3 == 1) goto lf1
+goto lf2
+lf1:
+2 = y * x
+null
+3 = x - 1
+null
+goto lw0
+lw2:
+print(El factorial de 6 es : )
+4 = y + hola
+print(4)
+print(El valor de x+1 es : )
+5 = x + 1
+6 = 5 + hola
+print(6)
+if(x == h) goto lb10
+if(t > y) goto lb10
+lb11:
+if(x > h) goto lb15
+goto lb16
+lb15:
+if(a < b) goto lb12
+goto lb16
+lb12:
+if(a == x) goto lb10
+lb16:
+if(z == y) goto lb17
+goto lb18
+lb17:
+if(x < a) goto lb10
+goto lb18
+lb10:
+if(x < z) goto lb20
+goto lb18
+lb20:
+null
+goto lb21
+lb18:
+null
+lb21:
+if(lf3 == 1) goto lf0
 goto lf1
 lf0:
-y = 9.0
+null
+lw4:
+7 = 1 * 2
+8 = c + 7
+if(8 > 0) goto lf5
+goto lf6
+lf5:
+print(Hola)
+goto lw4
+lw6:
+goto lf2
 lf1:
-x = 5.0
+null
+if(null) goto lf4
+goto lf5
+lf4:
+9 = f1 +  
+print(9)
+goto lf6
+lf5:
+lf6:
+lf2:
+10 = y * 35
+11 = 25 + 10
+12 = a / h
+13 = 12 + 8
+14 = 11 - 13
+null

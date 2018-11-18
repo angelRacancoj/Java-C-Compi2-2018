@@ -58,7 +58,7 @@ public class semanticFunctions {
      */
     public cicleFlag ifCycleInit(tempVar operator, int row, int column, int rowOpen, int columnOpen, cicleFlag returnFlag) throws InputsVaciosException {
         if (correctOpCicle(operator, row, column)) {
-            if (returnFlag != null) {
+            if (returnFlag == null) {
                 cicleFlag tempFlag = new cicleFlag(ifNumber + 2, rowOpen, columnOpen);
                 cicleLable temp = new cicleLable(new cicleStr(new cicleFlag(ifNumber, rowOpen, columnOpen), new cicleFlag(ifNumber + 1, rowOpen, columnOpen), tempFlag), constL.IF_ID, operator);
                 cicleLables.addFirst(temp);
