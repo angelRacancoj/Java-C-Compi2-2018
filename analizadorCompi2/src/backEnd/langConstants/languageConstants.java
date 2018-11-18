@@ -66,7 +66,7 @@ public class languageConstants {
     public final String LOGIC_FLAG_LABLE = "b";
 
     /*The front name of the variables*/
-    public final String VARIABLE_LABLE = "";
+    public final String VARIABLE_LABLE = "d";
 
     /*Etiquetas para analizadores*/
     public final int AN_LEXICO = 1;

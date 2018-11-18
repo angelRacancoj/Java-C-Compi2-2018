@@ -114,6 +114,8 @@ public class cuarteta {
             return (operator + languageC.FLAG_STR);
         } else if (operation == languageC.WRITE_ID) {
             return (languageC.WRITE + languageC.PAR_ABIERTO + operator + languageC.PAR_CERRADO);
+        } else if (operation == languageC.ASIGNAR_ID) {
+            return (operator + " " + languageC.ASIGNAR + " " + operando_1);
         } else {
             return null;
         }

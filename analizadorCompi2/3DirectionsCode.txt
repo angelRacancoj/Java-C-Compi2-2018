@@ -1,21 +1,21 @@
-null
-null
-null
-null
-null
-null
-null
-null
-null
-null
-0 = 2 * 4
-1 = 0 + 5
-null
-null
-null
-null
-null
-null
+x = 0
+y = 0
+z = 0
+f = 0
+g = 0
+h = 0
+t = 0
+id1 = true
+f1 = 0
+f2 = 0
+d0 = 2 * 4
+d1 = d0 + 5
+f3 = d1
+a = 0
+b = 2
+c = 0
+x = 6
+y = 1
 lw0:
 if(f < y) goto lb5
 if(x > h) goto lb3
@@ -33,60 +33,61 @@ lb6:
 if(x < z) goto lb8
 goto lb4
 lb8:
-null
+lf3 = 1
 goto lb9
 lb4:
-null
+lf3 = 0
 lb9:
 if(lf3 == 1) goto lf1
 goto lf2
 lf1:
-2 = y * x
-null
-3 = x - 1
-null
+d2 = y * x
+y = d2
+d3 = x - 1
+x = d3
 goto lw0
 lw2:
 print(El factorial de 6 es : )
-4 = y + hola
-print(4)
+d4 = y + hola
+print(d4)
 print(El valor de x+1 es : )
-5 = x + 1
-6 = 5 + hola
-print(6)
-if(x == h) goto lb10
-if(t > y) goto lb10
-lb11:
-if(x > h) goto lb15
-goto lb16
-lb15:
-if(a < b) goto lb12
-goto lb16
-lb12:
-if(a == x) goto lb10
-lb16:
-if(z == y) goto lb17
-goto lb18
-lb17:
-if(x < a) goto lb10
-goto lb18
-lb10:
-if(x < z) goto lb20
-goto lb18
-lb20:
-null
-goto lb21
-lb18:
-null
+d5 = x + 1
+d6 = d5 + hola
+print(d6)
+
+if(x == 10) goto lb10
+	if(40 > y) goto lb10
+	lb11:
+		if(x > 100) goto lb15
+		goto lb16
+		lb15:
+			if(a < b) goto lb12
+			goto lb16
+			lb12:
+				if(a == x) goto lb10
+				lb16:
+					if(z == y) goto lb17
+					goto lb18
+					lb17:
+						if(x < a) goto lb10
+						goto lb18
+						lb10:
+							if(x < z) goto lb20
+							goto lb18
+							lb20:
+								lf3 = 1
+							goto lb21
+							lb18:
+								lf3 = 0
 lb21:
 if(lf3 == 1) goto lf0
 goto lf1
 lf0:
-null
+y = 12
 lw4:
-7 = 1 * 2
-8 = c + 7
-if(8 > 0) goto lf5
+d7 = 1 * 2
+d8 = c + d7
+if(d8 > 0) goto lf5
 goto lf6
 lf5:
 print(Hola)
@@ -94,19 +95,19 @@ goto lw4
 lw6:
 goto lf2
 lf1:
-null
+f1 = 13.1
 if(null) goto lf4
 goto lf5
 lf4:
-9 = f1 +  
-print(9)
+d9 = f1 +  
+print(d9)
 goto lf6
 lf5:
 lf6:
 lf2:
-10 = y * 35
-11 = 25 + 10
-12 = a / h
-13 = 12 + 8
-14 = 11 - 13
-null
+d10 = y * 35
+d11 = 25 + d10
+d12 = a / h
+d13 = d12 + 8
+d14 = d11 - d13
+x = d14
