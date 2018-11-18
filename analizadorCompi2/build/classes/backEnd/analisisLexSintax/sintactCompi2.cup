@@ -3,6 +3,7 @@ package backEnd.analisisLexSintax;
 import java_cup.runtime.*;
 import backEnd.semantic.*;
 import backEnd.Objects.*;
+import backEnd.Objects.funtion.*;
 import backEnd.langConstants.languageConstants;
 import GUI.codeEditor;
 
@@ -25,7 +26,6 @@ parser code {:
 		System.out.println(message);
         semanticM.errorAndPlace(lanC.AN_SINTACTICO, message);
 		System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		semanticM.setErrorFound(true);
 	}
 :}
 
@@ -33,13 +33,17 @@ parser code {:
 terminal String NamInt, NamFloat, NamBoolean, NamString, NamMain, NamIf, NamWhile;
 terminal String PrintN, PrintS, BreakCom, Mas, Menos, Por, Div, Mayor, Menor, Igual, And;
 terminal String Or, Asignacion, EndCom, ParAbierto, ParCerrado, Coma, Booleano, Cadena;
-terminal String Entero, Decimal, Identificador, NamElse, Diferente, CorCerrado, CorAbierto;
-
+terminal String Entero,Decimal,Identificador, NamElse, Diferente, CorCerrado, CorAbierto;
+/*terminal int Entero;
+terminal float Decimal;
+*/
 /* Non terminal */
 non terminal String CODIGO, INICIO_CODIGO;
-non terminal Boolean IF_ELSE, IF_FUNCION, MAIN_IDE, MAIN_BODY, MAIN_FUNCION, CUERPO_CODIGO;
-non terminal Boolean IF_ELSE_FUNCION, WHILE_FUNCION, PRINT_FUNCION, PRINT_OPTION;
+non terminal Boolean MAIN_IDE, MAIN_BODY, MAIN_FUNCION, CUERPO_CODIGO;
+non terminal Boolean WHILE_FUNCION, PRINT_FUNCION, PRINT_OPTION;
 non terminal tempVar OPERACION;
+non terminal cicleFlag IF_ELSE, IF_ELSE_FUNCION;
+/*non terminal cicleFlag IF_FUNCION;*/  
 non terminal tempFinalVar ID_VAR;
 non terminal Integer DECLARACION_VAR; 
 /*Precedence*/
@@ -86,7 +90,7 @@ DECLARACION_VAR	::=	DECLARACION_VAR:e1 Coma:e3 ID_VAR:e2	{: semanticM.addVariabl
 					| NamString:e3 ID_VAR:e1				{: semanticM.addVariableToList(lanC.STRING, e1, e3left, e3right); RESULT = lanC.STRING;	:}
 					;
 
-ID_VAR			::=	Identificador:e						{: RESULT = semanticM.operations.varToSave(e, new tempVar(lanC.NO_TYPE_AUX,eleft, eright)); :}
+ID_VAR			::=	Identificador:e								{: RESULT = semanticM.operations.varToSave(e, new tempVar(lanC.NO_TYPE_AUX,eleft, eright)); :}
 					| Identificador:e1 Asignacion OPERACION:e2 	{: RESULT = semanticM.operations.varToSave(e1, e2); :}
 					;
 
@@ -101,28 +105,31 @@ OPERACION		::=	OPERACION:e1 Mas:e3 OPERACION:e2 			{: RESULT = semanticM.operati
 					| OPERACION:e1 Or:e3 OPERACION:e2 			{: RESULT = semanticM.operations.operation(lanC.OR, 	e1, e2, e3left, e3right); :}
 					| OPERACION:e1 And:e3 OPERACION:e2			{: RESULT = semanticM.operations.operation(lanC.AND, 	e1, e2, e3left, e3right); :}
 					| ParAbierto OPERACION:e ParCerrado			{: RESULT = e; :}
-					| Menos Entero:e							{: RESULT = new tempVar(-Double.parseDouble(e),lanC.DOUBLE_AUX,	eleft, eright); :}
-					| Menos Decimal:e							{: RESULT = new tempVar(-Double.parseDouble(e),lanC.DOUBLE_AUX,	eleft, eright); :}
-					| Entero:e									{: RESULT = new tempVar(Double.parseDouble(e), lanC.DOUBLE_AUX,	eleft, eright); :}
-					| Decimal:e									{: RESULT = new tempVar(Double.parseDouble(e), lanC.DOUBLE_AUX,	eleft, eright); :}
-					| Booleano:e 								{: RESULT = new tempVar(Boolean.valueOf(e),    lanC.BOOLEAN,	eleft, eright); :}
-					| Cadena:e 		 							{: RESULT = new tempVar(lanC.clearString(e),   lanC.STRING,		eleft, eright); :}
+					| Menos Entero:e							{: RESULT = new tempVar(-Integer.parseInt(e),	lanC.INTEGER,	eleft, eright); :}
+					| Menos Decimal:e							{: RESULT = new tempVar(-Float.parseFloat(e),	lanC.FLOAT, 	eleft, eright); :}
+					| Entero:e									{: RESULT = new tempVar(Integer.parseInt(e),	lanC.INTEGER, 	eleft, eright); :}
+					| Decimal:e									{: RESULT = new tempVar(Float.parseFloat(e),	lanC.FLOAT, 	eleft, eright); :}
+					| Booleano:e 								{: RESULT = new tempVar(Boolean.valueOf(e),		lanC.BOOLEAN,	eleft, eright); :}
+					| Cadena:e 		 							{: RESULT = new tempVar(lanC.clearString(e),	lanC.STRING,	eleft, eright); :}
 					| Identificador:e 							{: RESULT = semanticM.getTempVarFromList(e, eleft, eright); :}
 					;
 
-IF_ELSE_FUNCION	::= IF_ELSE 						{:  :}
-					| IF_ELSE NamElse CorAbierto:e1	{: semanticM.functions.elseCycle(e1left, e1right); :}
-					MAIN_BODY CorCerrado:e2			{: semanticM.functions.closeElseCycle(e2left, e2right); :}
+IF_ELSE_FUNCION	::= IF_ELSE:e1 							{: semanticM.functions.setJumpFlag(e1); :}
+					| IF_ELSE:e3 NamElse CorAbierto:e1	{: semanticM.functions.elseCycle(e1left, e1right); :}
+					MAIN_BODY CorCerrado:e2				{: semanticM.functions.closeElseCycle(e2left, e2right, e3); :}
 					;
 
-IF_ELSE 		::= IF_ELSE NamElse	IF_FUNCION		{:  :}
-					| IF_FUNCION 					{:  :}
+IF_ELSE 		::= IF_ELSE:e4 NamElse NamIf ParAbierto 
+					  OPERACION:e1 ParCerrado CorAbierto:e2 				{: RESULT = semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right, e4); :}
+					  MAIN_BODY CorCerrado:e3 								{: semanticM.functions.closeIfCycle(e3left, e3right); :}
+					| NamIf ParAbierto OPERACION:e1 ParCerrado CorAbierto:e2 {: RESULT = semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right,null); :}
+					  MAIN_BODY CorCerrado:e3 								{: semanticM.functions.closeIfCycle(e3left, e3right); :}
 					;
-
-IF_FUNCION 		::= NamIf ParAbierto OPERACION:e1 ParCerrado CorAbierto:e2	{: semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right); :}
+/*
+IF_FUNCION 		::= NamIf ParAbierto OPERACION:e1 ParCerrado CorAbierto:e2	{: RESULT = semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right); :}
 					MAIN_BODY CorCerrado:e3 								{: semanticM.functions.closeIfCycle(e3left, e3right); :}
 					;
-
+*/
 WHILE_FUNCION	::= NamWhile:e1 										{: semanticM.functions.startWhileCycle(e1left, e1right); :}
 					ParAbierto OPERACION:e2 ParCerrado CorAbierto:e3 	{: semanticM.functions.whileCycleInit(e2, e2left, e2right, e3left, e3right); :}
 					MAIN_BODY CorCerrado:e4 							{: semanticM.functions.closeWhileCycle(e4left, e4right); :}

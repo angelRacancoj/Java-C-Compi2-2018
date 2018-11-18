@@ -22,7 +22,7 @@ public class semanticManager {
     languageConstants languageC = new languageConstants();
     LinkedList<dataType> typeList = new LinkedList<>();
     LinkedList<finalVar> varList = new LinkedList<>();
-    LinkedList<String> threeDirectionsCode = new LinkedList<>();
+    //LinkedList<String> threeDirectionsCode = new LinkedList<>();
     LinkedList<cuarteta> forthDirCode = new LinkedList<>();
     LinkedList<errorObject> errors = new LinkedList<>();
 
@@ -53,21 +53,21 @@ public class semanticManager {
 
         if (tempFinalV != null) {
             if (tempFinalV.getdType().getNameData() == languageC.INTEGER) {
-                return new tempVar(tempFinalV.getvInteger(), languageC.INTEGER, row, column, id);
+                return new tempVar(tempFinalV.getvInteger(), row, column, languageC.INTEGER, id);
             } else if (tempFinalV.getdType().getNameData() == languageC.FLOAT) {
-                return new tempVar(tempFinalV.getvFloat(), languageC.FLOAT, row, column, id);
+                return new tempVar(tempFinalV.getvFloat(), row, column, languageC.FLOAT, id);
             } else if (tempFinalV.getdType().getNameData() == languageC.STRING) {
-                return new tempVar(tempFinalV.getvFloat(), languageC.STRING, row, column, id);
+                return new tempVar(tempFinalV.getvFloat(), row, column, languageC.STRING, id);
             } else if (tempFinalV.getdType().getNameData() == languageC.BOOLEAN) {
-                return new tempVar(tempFinalV.getvFloat(), languageC.BOOLEAN, row, column, id);
+                return new tempVar(tempFinalV.getvFloat(), row, column, languageC.BOOLEAN, id);
             } else {
                 errorAndPlace(languageC.AN_SEMANTICO, "No existe el tipo de dato indicado\nPara: " + id + " en la linea: " + row + " Columna: " + column);
-                reset3DirLists();
+                reset4DirLists();
                 return null;
             }
         } else {
             errorAndPlace(languageC.AN_SEMANTICO, "No existe la variable: " + id + "indicada en la linea: " + row + " Columna: " + column);
-            reset3DirLists();
+            reset4DirLists();
             return null;
         }
     }
@@ -108,15 +108,15 @@ public class semanticManager {
                 addTemp3DirCodeOp();
             } else {
                 errorAndPlace(languageC.AN_SEMANTICO, "No es compatible la variable " + data.getId() + " del tipo " + languageC.getDataTypeName(data.getDato().getCategory()) + " linea: " + row);
-                reset3DirLists();
+                reset4DirLists();
             }
         } else if (tempVarFound == null) {
             errorAndPlace(languageC.AN_SEMANTICO, "No existe la variable " + data.getId() + " del tipo " + languageC.getDataTypeName(data.getDato().getCategory()) + " linea: " + row);
-            reset3DirLists();
+            reset4DirLists();
         } else {
             errorAndPlace(languageC.AN_SEMANTICO, "Existe la variable " + data.getId() + " pero el dato debe ser "
                     + languageC.getDataTypeName(tempVarFound.getdType().getNameData()) + ", revisar linea " + row);
-            reset3DirLists();
+            reset4DirLists();
         }
     }
 
@@ -159,48 +159,53 @@ public class semanticManager {
                 } else {
                     errorAndPlace(languageC.AN_SEMANTICO, "No es compatible la variable " + data.getId() + " del tipo " + languageC.getDataTypeName(data.getDato().getCategory())
                             + " con el tipo de indicado " + languageC.getDataTypeName(dType) + " linea: " + row);
-                    reset3DirLists();
+                    reset4DirLists();
                 }
             } else if ((tempVarFound == null) && (tempType != null) && (data.getDato().getCategory() == languageC.NO_TYPE_AUX)) {
                 if (dType == languageC.INTEGER) {
                     varList.add(new finalVar(data.getId(), tempType, 0, languageC.VARIABLE));
                     addTemp3DirCodeOp();
                     forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
-                    threeDirectionsCode.add(data.getId() + " = " + 0);
                 } else if (dType == languageC.FLOAT) {
                     varList.add(new finalVar(data.getId(), tempType, 0, languageC.VARIABLE));
                     addTemp3DirCodeOp();
                     forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
-                    threeDirectionsCode.add(data.getId() + " = " + 0);
                 } else if ((dType == languageC.BOOLEAN)) {
                     varList.add(new finalVar(data.getId(), tempType, true, languageC.VARIABLE));
                     addTemp3DirCodeOp();
                     forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, languageC.TRUE_STR));
-                    threeDirectionsCode.add(data.getId() + " = " + 1);
                 } else if ((dType == languageC.STRING)) {
                     varList.add(new finalVar(data.getId(), tempType, "", languageC.VARIABLE));
                     addTemp3DirCodeOp();
                     forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "."));
-                    threeDirectionsCode.add(data.getId() + " = " + ".");
                 }
             } else if ((tempVarFound != null) && (tempType != null)) {
                 errorAndPlace(languageC.AN_SEMANTICO, "Ya se ha declarado la variable " + tempVarFound.getIdVar() + " de tipo "
                         + languageC.getDataTypeName(tempVarFound.getdType().getNameData()) + ", revisar linea " + row);
-                reset3DirLists();
+                reset4DirLists();
             } else {
                 errorAndPlace(languageC.AN_SEMANTICO, "No existe el tipo de dato indicado, revisar linea " + row);
-                reset3DirLists();
+                reset4DirLists();
             }
         } else {
             errorAndPlace(languageC.AN_SEMANTICO, "Imposible agregar revisar linea " + row + " revisar errores anteriores");
-            reset3DirLists();
+            reset4DirLists();
         }
     }
 
+    /*
     private String text3DirOut() {
         String textOut = "";
         for (String threeDirectionsCode1 : threeDirectionsCode) {
             textOut += (threeDirectionsCode1 + "\n");
+        }
+        return textOut;
+    }
+     */
+    private String text3DirOut() {
+        String textOut = "";
+        for (int i = 0; i < forthDirCode.size(); i++) {
+            textOut += (forthDirCode.get(i).getText() + "\n");
         }
         return textOut;
     }
@@ -287,7 +292,7 @@ public class semanticManager {
     }
 
     protected void addTemp3DirCodeOp() {
-        threeDirectionsCode.addAll(operations.getTemp3dir());
+        //threeDirectionsCode.addAll(operations.getTemp3dir());
         forthDirCode.addAll(operations.getTemp4thdir());
         operations.resetTemp3VarList();
     }
@@ -297,11 +302,10 @@ public class semanticManager {
      * functions to the list to be print after it works
      *
      * @param funtion
+     *
+     * public void addTemp3DirCodeFuntion(String funtion) {
+     * threeDirectionsCode.add(funtion); }
      */
-    public void addTemp3DirCodeFuntion(String funtion) {
-        threeDirectionsCode.add(funtion);
-    }
-
     /**
      * this method take care of add structure to the 4th-list
      *
@@ -334,11 +338,12 @@ public class semanticManager {
         forthDirCode.add(new cuarteta(operator, operation));
     }
 
+    /*
     private void reset3DirLists() {
         threeDirectionsCode.clear();
         operations.resetTemp3VarList();
     }
-
+     */
     private void reset4DirLists() {
         forthDirCode.clear();
         operations.resetTemp3VarList();
@@ -350,7 +355,8 @@ public class semanticManager {
      */
     public void resetAll() {
         forthDirCode.clear();
-        threeDirectionsCode.clear();
+        varList.clear();
+        //threeDirectionsCode.clear();
         operations.resetTemp3VarList();
         operations.resetContador();
         functions.resetAll();

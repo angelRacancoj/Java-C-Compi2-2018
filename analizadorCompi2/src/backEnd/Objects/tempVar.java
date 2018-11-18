@@ -5,6 +5,9 @@
  */
 package backEnd.Objects;
 
+import backEnd.exceptions.InputsVaciosException;
+import backEnd.langConstants.languageConstants;
+
 /**
  *
  * @author angel
@@ -18,6 +21,8 @@ public class tempVar extends Variable {
     tempVar left;
     int operation;
     andOrStr andOrObject;
+
+    languageConstants languageC = new languageConstants();
 
     /**
      * This constructor take care of the OR and AND logic operation
@@ -40,7 +45,7 @@ public class tempVar extends Variable {
      * @param vInteger
      * @param column
      */
-    public tempVar(int vInteger, int row, int column, int category) {
+    public tempVar(int vInteger, int category, int row, int column) {
         super(vInteger, category);
         this.row = row;
         this.column = column;
@@ -58,7 +63,7 @@ public class tempVar extends Variable {
      * @param column
      * @param category
      */
-    public tempVar(float vFloat, int row, int column, int category) {
+    public tempVar(float vFloat, int category, int row, int column) {
         super(vFloat, category);
         this.row = row;
         this.column = column;
@@ -151,7 +156,7 @@ public class tempVar extends Variable {
      * @param column
      * @param id3Dir
      */
-    public tempVar(String vString, int category, int row, int column, String id3Dir) {
+    public tempVar(String vString, int row, int column, int category, String id3Dir) {
         super(vString, category);
         this.row = row;
         this.column = column;
@@ -171,12 +176,13 @@ public class tempVar extends Variable {
      * @param id3Dir
      * @param left
      * @param right
+     * @param operation
      */
-    public tempVar(boolean vBool, int category, int row, int column, String id3Dir, tempVar left, tempVar right, int operation) {
+    public tempVar(boolean vBool, int category, int row, int column, tempVar left, tempVar right, int operation) {
         super(vBool, category);
         this.row = row;
         this.column = column;
-        this.id3Dir = id3Dir;
+        this.id3Dir = null;
         this.right = right;
         this.left = left;
         this.operation = operation;
@@ -190,6 +196,24 @@ public class tempVar extends Variable {
         this.right = null;
         this.left = null;
         this.andOrObject = null;
+    }
+
+    public String getLogicOp() throws InputsVaciosException {
+        if (operation == languageC.MAYOR_Q_ID) {
+            return getOp(languageC.MAYOR_Q);
+        } else if (operation == languageC.MENOR_Q_ID) {
+            return getOp(languageC.MENOR_Q);
+        } else if (operation == languageC.DIF_ID) {
+            return getOp(languageC.DIF);
+        } else if (operation == languageC.IGUAL_ID) {
+            return getOp(languageC.IGUAL);
+        } else {
+            return null;
+        }
+    }
+
+    private String getOp(String op) throws InputsVaciosException {
+        return (languageC.getID_Value(this.left) + " " + op + " " + languageC.getID_Value(this.right));
     }
 
     public int getOperation() {

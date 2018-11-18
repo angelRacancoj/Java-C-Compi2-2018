@@ -18,7 +18,7 @@ import java.util.LinkedList;
 public class semanticOperations {
 
     private languageConstants constL = new languageConstants();
-    private LinkedList<String> temp3dir = new LinkedList<>();
+    //private LinkedList<String> temp3dir = new LinkedList<>();
     private LinkedList<cuarteta> temp4thdir = new LinkedList<>();
     private int contador = 0;
     private int boolCont = 0;
@@ -142,38 +142,38 @@ public class semanticOperations {
 
     private tempVar logicOp(String operator, tempVar dato1, tempVar dato2, int row, int column) throws InputsVaciosException {
         if (operator.equals(constL.MAYOR_Q)) {
-            if (((dato1.getCategory() == constL.INTEGER) && (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
-                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.MAYOR_Q, constL.MAYOR_Q_ID), dato1, dato2, constL.MAYOR_Q_ID);
+            if (((dato1.getCategory() == constL.INTEGER) || (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
+                return new tempVar(true, constL.BOOLEAN, row, column, dato1, dato2, constL.MAYOR_Q_ID);
             } else {
                 catchIncorrectValues(operator, dato1, dato2, row, column, constL.FLOAT, constL.FLOAT);
                 return null;
             }
         } else if (operator.equals(constL.MENOR_Q)) {
-            if (((dato1.getCategory() == constL.INTEGER) && (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
-                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.MENOR_Q, constL.MENOR_Q_ID), dato1, dato2, constL.MENOR_Q_ID);
+            if (((dato1.getCategory() == constL.INTEGER) || (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
+                return new tempVar(true, constL.BOOLEAN, row, column, dato1, dato2, constL.MENOR_Q_ID);
             } else {
                 catchIncorrectValues(operator, dato1, dato2, row, column, constL.FLOAT, constL.FLOAT);
                 return null;
             }
         } else if (operator.equals(constL.IGUAL)) {
-            if (((dato1.getCategory() == constL.INTEGER) && (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
-                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.IGUAL, constL.IGUAL_ID), dato1, dato2, constL.IGUAL_ID);
+            if (((dato1.getCategory() == constL.INTEGER) || (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
+                return new tempVar(true, constL.BOOLEAN, row, column, dato1, dato2, constL.IGUAL_ID);
             } else if ((dato1.getCategory() == constL.BOOLEAN) && (dato2.getCategory() == constL.BOOLEAN)) {
-                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.IGUAL, constL.IGUAL_ID), dato1, dato2, constL.IGUAL_ID);
+                return new tempVar(true, constL.BOOLEAN, row, column, dato1, dato2, constL.IGUAL_ID);
             } else if ((dato1.getCategory() == constL.STRING) && (dato2.getCategory() == constL.STRING)) {
-                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.IGUAL, constL.IGUAL_ID), dato1, dato2, constL.IGUAL_ID);
+                return new tempVar(true, constL.BOOLEAN, row, column, dato1, dato2, constL.IGUAL_ID);
             } else {
                 catchIncorrectValues(operator, dato1, dato2, row, column, constL.FLOAT, constL.FLOAT);
                 return null;
             }
 
         } else if (operator.equals(constL.DIF)) {
-            if (((dato1.getCategory() == constL.INTEGER) && (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
-                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.DIF, constL.DIF_ID), dato1, dato2, constL.DIF_ID);
+            if (((dato1.getCategory() == constL.INTEGER) || (dato1.getCategory() == constL.FLOAT)) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
+                return new tempVar(true, constL.BOOLEAN, row, column, dato1, dato2, constL.DIF_ID);
             } else if ((dato1.getCategory() == constL.BOOLEAN) && (dato2.getCategory() == constL.BOOLEAN)) {
-                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.DIF, constL.DIF_ID), dato1, dato2, constL.DIF_ID);
+                return new tempVar(true, constL.BOOLEAN, row, column, dato1, dato2, constL.DIF_ID);
             } else if ((dato1.getCategory() == constL.STRING) && (dato2.getCategory() == constL.STRING)) {
-                return new tempVar(true, constL.BOOLEAN, row, column, nameToTemp3Dir(dato1, dato2, constL.DIF, constL.DIF_ID), dato1, dato2, constL.DIF_ID);
+                return new tempVar(true, constL.BOOLEAN, row, column, dato1, dato2, constL.DIF_ID);
             } else {
                 catchIncorrectValues(operator, dato1, dato2, row, column, constL.FLOAT, constL.FLOAT);
                 return null;
@@ -205,27 +205,27 @@ public class semanticOperations {
         if (((dato1.getCategory() == constL.FLOAT) || (dato1.getCategory() == constL.INTEGER)) && ((dato2.getCategory() == constL.FLOAT) || (dato2.getCategory() == constL.INTEGER))) {
             if (operator.equals(constL.MAS)) {
                 if ((dato1.getCategory() == constL.FLOAT) || (dato2.getCategory() == constL.FLOAT)) {
-                    return new tempVar(0, constL.FLOAT, row, column, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
+                    return new tempVar(0, row, column, constL.FLOAT, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
                 } else {
-                    return new tempVar(0, constL.INTEGER, row, column, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
+                    return new tempVar(0, row, column, constL.INTEGER, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
                 }
             } else if (operator.equals(constL.MENOS)) {
                 if ((dato1.getCategory() == constL.FLOAT) || (dato2.getCategory() == constL.FLOAT)) {
-                    return new tempVar(0, constL.FLOAT, row, column, nameToTemp3Dir(dato1, dato2, constL.MENOS, constL.MENOS_ID));
+                    return new tempVar(0, row, column, constL.FLOAT, nameToTemp3Dir(dato1, dato2, constL.MENOS, constL.MENOS_ID));
                 } else {
-                    return new tempVar(0, constL.INTEGER, row, column, nameToTemp3Dir(dato1, dato2, constL.MENOS, constL.MENOS_ID));
+                    return new tempVar(0, row, column, constL.INTEGER, nameToTemp3Dir(dato1, dato2, constL.MENOS, constL.MENOS_ID));
                 }
             } else if (operator.equals(constL.POR)) {
                 if ((dato1.getCategory() == constL.FLOAT) || (dato2.getCategory() == constL.FLOAT)) {
-                    return new tempVar(0, constL.FLOAT, row, column, nameToTemp3Dir(dato1, dato2, constL.POR, constL.POR_ID));
+                    return new tempVar(0, row, column, constL.FLOAT, nameToTemp3Dir(dato1, dato2, constL.POR, constL.POR_ID));
                 } else {
-                    return new tempVar(0, constL.INTEGER, row, column, nameToTemp3Dir(dato1, dato2, constL.POR, constL.POR_ID));
+                    return new tempVar(0, row, column, constL.INTEGER, nameToTemp3Dir(dato1, dato2, constL.POR, constL.POR_ID));
                 }
             } else if (operator.equals(constL.DIV)) {
                 if ((dato1.getCategory() == constL.FLOAT) || (dato2.getCategory() == constL.FLOAT)) {
-                    return new tempVar(0, constL.FLOAT, row, column, nameToTemp3Dir(dato1, dato2, constL.DIV, constL.DIV_ID));
+                    return new tempVar(0, row, column, constL.FLOAT, nameToTemp3Dir(dato1, dato2, constL.DIV, constL.DIV_ID));
                 } else {
-                    return new tempVar(0, constL.INTEGER, row, column, nameToTemp3Dir(dato1, dato2, constL.DIV, constL.DIV_ID));
+                    return new tempVar(0, row, column, constL.INTEGER, nameToTemp3Dir(dato1, dato2, constL.DIV, constL.DIV_ID));
                 }
             } else {
                 sendError("Operacion: >> " + operator + " << inexistente");
@@ -239,28 +239,28 @@ public class semanticOperations {
 
     private tempVar StringOp(tempVar dato1, tempVar dato2, int row, int column) throws InputsVaciosException {
         if (((dato1.getCategory() == constL.INTEGER) || (dato1.getCategory() == constL.FLOAT)) && (dato2.getCategory() == constL.STRING)) {
-            return new tempVar("", constL.STRING, row, column, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
+            return new tempVar("", row, column, constL.STRING, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
 
         } else if (((dato1.getCategory() == constL.INTEGER) || (dato1.getCategory() == constL.FLOAT)) && (dato2.getCategory() == constL.BOOLEAN)) {
-            return new tempVar("", constL.STRING, row, column, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
+            return new tempVar("", row, column, constL.STRING, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
 
         } else if ((dato1.getCategory() == constL.BOOLEAN) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
-            return new tempVar("", constL.STRING, row, column, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
+            return new tempVar("", row, column, constL.STRING, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
 
         } else if ((dato1.getCategory() == constL.BOOLEAN) && (dato2.getCategory() == constL.BOOLEAN)) {
-            return new tempVar("", constL.STRING, row, column, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
+            return new tempVar("", row, column, constL.STRING, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
 
         } else if ((dato1.getCategory() == constL.BOOLEAN) && (dato2.getCategory() == constL.STRING)) {
-            return new tempVar("", constL.STRING, row, column, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
+            return new tempVar("", row, column, constL.STRING, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
 
         } else if ((dato1.getCategory() == constL.STRING) && ((dato2.getCategory() == constL.INTEGER) || (dato2.getCategory() == constL.FLOAT))) {
-            return new tempVar("", constL.STRING, row, column, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
+            return new tempVar("", row, column, constL.STRING, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
 
         } else if ((dato1.getCategory() == constL.STRING) && (dato2.getCategory() == constL.BOOLEAN)) {
-            return new tempVar("", constL.STRING, row, column, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
+            return new tempVar("", row, column, constL.STRING, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
 
         } else if ((dato1.getCategory() == constL.STRING) && (dato2.getCategory() == constL.STRING)) {
-            return new tempVar("", constL.STRING, row, column, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
+            return new tempVar("", row, column, constL.STRING, nameToTemp3Dir(dato1, dato2, constL.MAS, constL.MAS_ID));
 
         } else {
             catchIncorrectValues(constL.MAS, dato1, dato2, row, column, constL.STRING, constL.STRING);
@@ -272,25 +272,21 @@ public class semanticOperations {
         dataType tempType = semanticM.findDType(dato1.getCategory());
         if (constL.stringIsEmpty(dato1.getId3Dir()) && constL.stringIsEmpty(dato2.getId3Dir())) {
             String temp = constL.VARIABLE_LABLE + "" + contador;
-            temp3dir.add(temp + "" + constL.ASIGNAR + "" + constL.valueParsed(dato1) + " " + operator + " " + constL.valueParsed(dato2));
             temp4thdir.add(new cuarteta(tempType, temp, opCode, constL.valueParsed(dato1), constL.valueParsed(dato2)));
             contador++;
             return temp;
         } else if (!constL.stringIsEmpty(dato1.getId3Dir()) && constL.stringIsEmpty(dato2.getId3Dir())) {
             String temp = constL.VARIABLE_LABLE + "" + contador;
-            temp3dir.add(temp + "" + constL.ASIGNAR + "" + dato1.getId3Dir() + " " + operator + " " + constL.valueParsed(dato2));
             temp4thdir.add(new cuarteta(tempType, temp, opCode, dato1.getId3Dir(), constL.valueParsed(dato2)));
             contador++;
             return temp;
         } else if (constL.stringIsEmpty(dato1.getId3Dir()) && !constL.stringIsEmpty(dato2.getId3Dir())) {
             String temp = constL.VARIABLE_LABLE + "" + contador;
-            temp3dir.add(temp + "" + constL.ASIGNAR + "" + constL.valueParsed(dato1) + " " + operator + " " + dato2.getId3Dir());
             temp4thdir.add(new cuarteta(tempType, temp, opCode, constL.valueParsed(dato1), dato2.getId3Dir()));
             contador++;
             return temp;
         } else {
             String temp = constL.VARIABLE_LABLE + "" + contador;
-            temp3dir.add(temp + "" + constL.ASIGNAR + "" + dato1.getId3Dir() + " " + operator + " " + dato2.getId3Dir());
             temp4thdir.add(new cuarteta(tempType, temp, opCode, dato1.getId3Dir(), dato2.getId3Dir()));
             contador++;
             return temp;
@@ -402,7 +398,6 @@ public class semanticOperations {
      * @param id2
      */
     private void addToTemp3dir(String id1, String id2, int tempT) {
-        temp3dir.add(id1 + "" + constL.ASIGNAR + "" + id2);
         dataType tempType = semanticM.findDType(tempT);
         temp4thdir.add(new cuarteta(tempType, id1, constL.ASIGNAR_ID, id2));
 
@@ -412,7 +407,6 @@ public class semanticOperations {
      * Just clear the 3 Directions temporal list, and 4th directions too.
      */
     public void resetTemp3VarList() {
-        temp3dir.clear();
         temp4thdir.clear();
     }
 
@@ -434,14 +428,6 @@ public class semanticOperations {
 
     public void setBoolCont(int boolCont) {
         this.boolCont = boolCont;
-    }
-
-    public LinkedList<String> getTemp3dir() {
-        return temp3dir;
-    }
-
-    public void setTemp3dir(LinkedList<String> temp3dir) {
-        this.temp3dir = temp3dir;
     }
 
     public LinkedList<cuarteta> getTemp4thdir() {

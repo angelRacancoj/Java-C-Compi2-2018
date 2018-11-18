@@ -8,6 +8,7 @@ package backEnd.semantic;
 import backEnd.Objects.finalStr.cuarteta;
 import backEnd.Objects.funtion.*;
 import backEnd.Objects.tempVar;
+import backEnd.exceptions.InputsVaciosException;
 import backEnd.langConstants.languageConstants;
 import java.util.LinkedList;
 
@@ -53,8 +54,9 @@ public class semanticFunctions {
      * @param columnOpen
      * @param returnFlag
      * @return
+     * @throws backEnd.exceptions.InputsVaciosException
      */
-    public cicleFlag ifCycleInit(tempVar operator, int row, int column, int rowOpen, int columnOpen, cicleFlag returnFlag) {
+    public cicleFlag ifCycleInit(tempVar operator, int row, int column, int rowOpen, int columnOpen, cicleFlag returnFlag) throws InputsVaciosException {
         if (correctOpCicle(operator, row, column)) {
             if (returnFlag != null) {
                 cicleFlag tempFlag = new cicleFlag(ifNumber + 2, rowOpen, columnOpen);
@@ -63,25 +65,30 @@ public class semanticFunctions {
                 cicleLablesList.addFirst(temp);
                 semanticM.addTemp3DirCodeOp();
 
-                semanticM.addTemp3DirCodeFuntion("\n" + constL.IF_NAME + " (" + operator.getId3Dir() + ") " + constL.GOTO_STR + " " + constL.IF_LABLE + "" + ifNumber);
-                semanticM.addTemp3DirCodeFuntion(constL.GOTO_STR + " " + constL.IF_LABLE + "" + (ifNumber + 1));
-                semanticM.addTemp3DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber) + "" + constL.FLAG_STR);
+                if (operator.getOperation() == constL.AND_ID || operator.getOperation() == constL.OR_ID) {
+                    LinkedList<cuarteta> listTemp = new LinkedList<>();
+                    listTemp.addAll(operator.getAndOrObject().getStructure());
+                    listTemp.add(new cuarteta(operator.getAndOrObject().getTrueFlag(), constL.FLAG_STR_ID));
+                    listTemp.add(new cuarteta(null, constL.IF_LABLE + (ifNumber + 3), constL.ASIGNAR_ID, "1"));
+                    listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.GOTO_STR_ID));
+                    listTemp.add(new cuarteta(operator.getAndOrObject().getFalseFlag(), constL.FLAG_STR_ID));
+                    listTemp.add(new cuarteta(null, constL.IF_LABLE + (ifNumber + 3), constL.ASIGNAR_ID, "0"));
+                    listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.FLAG_STR_ID));
+                    semanticM.addAllTemp4DirCode(listTemp);
+                    semanticM.operations.addBoolCont();
+                    semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + (ifNumber + 3) + " " + constL.IGUAL + " 1", constL.IF_ID, constL.IF_LABLE + "" + (ifNumber));
+                    semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (ifNumber + 1)), constL.GOTO_STR_ID);
+                    semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber), constL.FLAG_STR_ID);
 
-                LinkedList<cuarteta> listTemp = new LinkedList<>();
-                listTemp.addAll(operator.getAndOrObject().getStructure());
-                listTemp.add(new cuarteta(operator.getAndOrObject().getTrueFlag(), constL.FLAG_STR_ID));
-                listTemp.add(new cuarteta(semanticM.findDType(operator.getCategory()), constL.IF_LABLE + ifNumber, constL.ASIGNAR_ID, "1"));
-                listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.GOTO_STR_ID));
-                listTemp.add(new cuarteta(operator.getAndOrObject().getFalseFlag(), constL.FLAG_STR_ID));
-                listTemp.add(new cuarteta(semanticM.findDType(operator.getCategory()), constL.IF_LABLE + ifNumber, constL.ASIGNAR_ID, "0"));
-                listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.FLAG_STR_ID));
-                semanticM.addAllTemp4DirCode(listTemp);
-                semanticM.operations.addBoolCont();
-                semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + ifNumber + " " + constL.IGUAL + " 1", constL.IF_ID, constL.IF_LABLE + "" + (ifNumber + 1));
-                semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (ifNumber + 2)), constL.GOTO_STR_ID);
-                semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber + 1), constL.FLAG_STR_ID);
+                    ifNumber += 4;
+                } else {
+                    semanticM.addTemp4DirCodeFuntion(operator.getLogicOp(), constL.IF_ID, constL.IF_LABLE + "" + ifNumber);
+                    semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (ifNumber + 1)), constL.GOTO_STR_ID);
+                    semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + ifNumber, constL.FLAG_STR_ID);
 
-                ifNumber += 3;
+                    ifNumber += 3;
+                }
+
                 return tempFlag;
             } else {
                 cicleLable temp = new cicleLable(new cicleStr(new cicleFlag(ifNumber, rowOpen, columnOpen), new cicleFlag(ifNumber + 1, rowOpen, columnOpen), returnFlag), constL.IF_ID, operator);
@@ -89,25 +96,29 @@ public class semanticFunctions {
                 cicleLablesList.addFirst(temp);
                 semanticM.addTemp3DirCodeOp();
 
-                semanticM.addTemp3DirCodeFuntion("\n" + constL.IF_NAME + " (" + operator.getId3Dir() + ") " + constL.GOTO_STR + " " + constL.IF_LABLE + "" + ifNumber);
-                semanticM.addTemp3DirCodeFuntion(constL.GOTO_STR + " " + constL.IF_LABLE + "" + (ifNumber + 1));
-                semanticM.addTemp3DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber) + "" + constL.FLAG_STR);
+                if (operator.getOperation() == constL.AND_ID || operator.getOperation() == constL.OR_ID) {
+                    LinkedList<cuarteta> listTemp = new LinkedList<>();
+                    listTemp.addAll(operator.getAndOrObject().getStructure());
+                    listTemp.add(new cuarteta(operator.getAndOrObject().getTrueFlag(), constL.FLAG_STR_ID));
+                    listTemp.add(new cuarteta(semanticM.findDType(operator.getCategory()), constL.IF_LABLE + (ifNumber + 2), constL.ASIGNAR_ID, "1"));
+                    listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.GOTO_STR_ID));
+                    listTemp.add(new cuarteta(operator.getAndOrObject().getFalseFlag(), constL.FLAG_STR_ID));
+                    listTemp.add(new cuarteta(semanticM.findDType(operator.getCategory()), constL.IF_LABLE + (ifNumber + 2), constL.ASIGNAR_ID, "0"));
+                    listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.FLAG_STR_ID));
+                    semanticM.addAllTemp4DirCode(listTemp);
+                    semanticM.operations.addBoolCont();
+                    semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + (ifNumber + 2) + " " + constL.IGUAL + " 1", constL.IF_ID, constL.IF_LABLE + "" + (ifNumber));
+                    semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (ifNumber + 1)), constL.GOTO_STR_ID);
+                    semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber), constL.FLAG_STR_ID);
 
-                LinkedList<cuarteta> listTemp = new LinkedList<>();
-                listTemp.addAll(operator.getAndOrObject().getStructure());
-                listTemp.add(new cuarteta(operator.getAndOrObject().getTrueFlag(), constL.FLAG_STR_ID));
-                listTemp.add(new cuarteta(semanticM.findDType(operator.getCategory()), constL.IF_LABLE + ifNumber, constL.ASIGNAR_ID, "1"));
-                listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.GOTO_STR_ID));
-                listTemp.add(new cuarteta(operator.getAndOrObject().getFalseFlag(), constL.FLAG_STR_ID));
-                listTemp.add(new cuarteta(semanticM.findDType(operator.getCategory()), constL.IF_LABLE + ifNumber, constL.ASIGNAR_ID, "0"));
-                listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.FLAG_STR_ID));
-                semanticM.addAllTemp4DirCode(listTemp);
-                semanticM.operations.addBoolCont();
-                semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + ifNumber + " " + constL.IGUAL + " 1", constL.IF_ID, constL.IF_LABLE + "" + (ifNumber + 1));
-                semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (ifNumber + 2)), constL.GOTO_STR_ID);
-                semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + (ifNumber + 1), constL.FLAG_STR_ID);
+                    ifNumber += 3;
+                } else {
+                    semanticM.addTemp4DirCodeFuntion(operator.getLogicOp(), constL.IF_ID, constL.IF_LABLE + "" + ifNumber);
+                    semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (ifNumber + 1)), constL.GOTO_STR_ID);
+                    semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + ifNumber, constL.FLAG_STR_ID);
 
-                ifNumber += 3;
+                    ifNumber += 2;
+                }
                 return returnFlag;
             }
         }
@@ -123,8 +134,6 @@ public class semanticFunctions {
     public void closeIfCycle(int row, int column) {
         if (!cicleLables.isEmpty()) {
             if (cicleLables.getFirst().getCicleType() == constL.IF_ID) {
-                semanticM.addTemp3DirCodeFuntion(constL.GOTO_STR + " " + constL.IF_LABLE + "" + cicleLables.getFirst().getIfCicleStr().getReturnFlag().getNumber());
-                semanticM.addTemp3DirCodeFuntion(constL.IF_LABLE + "" + cicleLables.getFirst().getIfCicleStr().getJumpFlag().getNumber() + "" + constL.FLAG_STR);
 
                 semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + cicleLables.getFirst().getIfCicleStr().getReturnFlag().getNumber(), constL.GOTO_STR_ID);
                 semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + cicleLables.getFirst().getIfCicleStr().getJumpFlag().getNumber(), constL.FLAG_STR_ID);
@@ -146,7 +155,6 @@ public class semanticFunctions {
      * @param jumpFlag
      */
     public void setJumpFlag(cicleFlag jumpFlag) {
-        semanticM.addTemp3DirCodeFuntion(constL.IF_LABLE + "" + (jumpFlag.getNumber()) + "" + constL.FLAG_STR);
         semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + (jumpFlag.getNumber()), constL.FLAG_STR_ID);
     }
 
@@ -194,7 +202,7 @@ public class semanticFunctions {
         cicleLable temp = new cicleLable(new cicleStr(new cicleFlag(whileNumber, row, column)), constL.WHILE_ID);
         cicleLables.addFirst(temp);
         cicleLablesList.addFirst(temp);
-        semanticM.addTemp3DirCodeFuntion(constL.WHILE_LABLE + whileNumber + ":");
+        semanticM.addTemp4DirCodeFuntion(constL.WHILE_LABLE + whileNumber, constL.FLAG_STR_ID);
         whileNumber++;
     }
 
@@ -207,17 +215,35 @@ public class semanticFunctions {
      * @param rowOpen
      * @param columnOpen
      */
-    public void whileCycleInit(tempVar operator, int row, int column, int rowOpen, int columnOpen) {
+    public void whileCycleInit(tempVar operator, int row, int column, int rowOpen, int columnOpen) throws InputsVaciosException {
         if (correctOpCicle(operator, row, column) && (!cicleLables.isEmpty())) {
             if (cicleLables.getFirst().getCicleType() == constL.WHILE_ID) {
                 cicleLables.getFirst().getIfCicleStr().setIfFlag(new cicleFlag(whileNumber, rowOpen, columnOpen));
                 cicleLables.getFirst().getIfCicleStr().setJumpFlag(new cicleFlag(whileNumber + 1, rowOpen, columnOpen));
 
                 semanticM.addTemp3DirCodeOp();
-                semanticM.addTemp3DirCodeFuntion(constL.IF_NAME + " (" + operator.getId3Dir() + ") " + constL.GOTO_STR + " " + constL.WHILE_NAME + "" + whileNumber);
-                semanticM.addTemp3DirCodeFuntion(constL.GOTO_STR + " " + constL.WHILE_LABLE + "" + (whileNumber + 1));
-                semanticM.addTemp3DirCodeFuntion(constL.WHILE_LABLE + "" + whileNumber + "" + constL.FLAG_STR);
-                whileNumber += 2;
+
+                if (operator.getOperation() == constL.AND_ID || operator.getOperation() == constL.OR_ID) {
+                    LinkedList<cuarteta> listTemp = new LinkedList<>();
+                    listTemp.addAll(operator.getAndOrObject().getStructure());
+                    listTemp.add(new cuarteta(operator.getAndOrObject().getTrueFlag(), constL.FLAG_STR_ID));
+                    listTemp.add(new cuarteta(null, constL.IF_LABLE + (whileNumber + 2), constL.ASIGNAR_ID, "1"));
+                    listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.GOTO_STR_ID));
+                    listTemp.add(new cuarteta(operator.getAndOrObject().getFalseFlag(), constL.FLAG_STR_ID));
+                    listTemp.add(new cuarteta(null, constL.IF_LABLE + (whileNumber + 2), constL.ASIGNAR_ID, "0"));
+                    listTemp.add(new cuarteta(constL.LOGIC_LABLE + semanticM.operations.getBoolCont(), constL.FLAG_STR_ID));
+                    semanticM.addAllTemp4DirCode(listTemp);
+                    semanticM.operations.addBoolCont();
+                    semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + (whileNumber + 2) + " " + constL.IGUAL + " 1", constL.IF_ID, constL.IF_LABLE + "" + whileNumber);
+                    semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (whileNumber + 1)), constL.GOTO_STR_ID);
+                    semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + whileNumber, constL.FLAG_STR_ID);
+                    whileNumber += 3;
+                } else {
+                    semanticM.addTemp4DirCodeFuntion(operator.getLogicOp(), constL.IF_ID, constL.IF_LABLE + "" + whileNumber);
+                    semanticM.addTemp4DirCodeFuntion((constL.IF_LABLE + "" + (whileNumber + 1)), constL.GOTO_STR_ID);
+                    semanticM.addTemp4DirCodeFuntion(constL.IF_LABLE + "" + whileNumber, constL.FLAG_STR_ID);
+                    whileNumber += 2;
+                }
             } else {
                 semanticM.errorAndPlace(constL.AN_SEMANTICO, "Error al iniciar ciclo while, Linea: " + row + " Columna: " + column);
             }
@@ -235,9 +261,6 @@ public class semanticFunctions {
     public void closeWhileCycle(int row, int column) {
         if (!cicleLables.isEmpty()) {
             if (cicleLables.getFirst().getCicleType() == constL.WHILE_ID) {
-                semanticM.addTemp3DirCodeFuntion(constL.GOTO_STR + " " + constL.WHILE_LABLE + "" + cicleLables.getFirst().getIfCicleStr().getReturnFlag().getNumber());
-                semanticM.addTemp3DirCodeFuntion(constL.WHILE_LABLE + "" + cicleLables.getFirst().getIfCicleStr().getJumpFlag().getNumber() + "" + constL.FLAG_STR);
-
                 semanticM.addTemp4DirCodeFuntion(constL.WHILE_LABLE + "" + cicleLables.getFirst().getIfCicleStr().getReturnFlag().getNumber(), constL.GOTO_STR_ID);
                 semanticM.addTemp4DirCodeFuntion(constL.WHILE_LABLE + "" + cicleLables.getFirst().getIfCicleStr().getJumpFlag().getNumber(), constL.FLAG_STR_ID);
                 cicleLablePosition(cicleLables.getFirst()).setCicleClosed(true);
@@ -260,9 +283,9 @@ public class semanticFunctions {
     public void breakFound(int row, int column) {
         if (!cicleLables.isEmpty()) {
             if (cicleLables.getFirst().getCicleType() == constL.WHILE_ID) {
-                semanticM.addTemp3DirCodeFuntion(constL.GOTO_STR + " " + constL.WHILE_LABLE + "" + cicleLables.getFirst().getIfCicleStr().getJumpFlag().getNumber());
+                semanticM.addTemp4DirCodeFuntion(constL.WHILE_LABLE + "" + cicleLables.getFirst().getIfCicleStr().getJumpFlag().getNumber(), constL.GOTO_STR_ID);
             } else if ((whileCicleOpen() != null) && (cicleLables.getFirst().getCicleType() != constL.WHILE_ID)) {
-                semanticM.addTemp3DirCodeFuntion(constL.GOTO_STR + " " + constL.WHILE_LABLE + "" + whileCicleOpen().getIfCicleStr().getJumpFlag().getNumber());
+                semanticM.addTemp4DirCodeFuntion(constL.WHILE_LABLE + "" + whileCicleOpen().getIfCicleStr().getJumpFlag().getNumber(), constL.GOTO_STR_ID);
             } else {
                 semanticM.errorAndPlace(constL.AN_SEMANTICO, "Break fuera de ciclo While, Linea: " + row + " Columna: " + column);
             }
@@ -277,11 +300,13 @@ public class semanticFunctions {
      * @param data
      * @param row
      * @param column
+     * @throws backEnd.exceptions.InputsVaciosException
      */
-    public void correctStringPrint(tempVar data, int row, int column) {
+    public void correctStringPrint(tempVar data, int row, int column) throws InputsVaciosException {
         if (data != null) {
             if (data.getCategory() != constL.NO_TYPE_AUX) {
                 semanticM.addTemp3DirCodeOp();
+                semanticM.addTemp4DirCodeFuntion(constL.getID_Value(data), constL.WRITE_ID);
             } else {
                 semanticM.errorAndPlace(constL.AN_SEMANTICO, "Estructura de Impresion vacia, Linea: " + row + " Columna: " + column);
             }

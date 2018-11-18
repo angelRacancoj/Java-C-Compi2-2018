@@ -92,6 +92,9 @@ public class languageConstants {
     public final String ASIGNAR = "=";
     public final String TRUE_STR = "true";
     public final String FALSE_STR = "false";
+    public final String PAR_ABIERTO = "(";
+    public final String PAR_CERRADO = ")";
+    public final String WRITE = "print";
 
     /*Etiquetas para ciclos*/
     public final int GOTO_STR_ID = -1;
@@ -120,6 +123,7 @@ public class languageConstants {
     public final int ARRAY_ID = 15;
     public final int TRUE_STR_ID = 16;
     public final int FALSE_STR_ID = 17;
+    public final int WRITE_ID = 18;
     public final int _ID = 0;
 
     public boolean stringIsEmpty(String textoIn) {

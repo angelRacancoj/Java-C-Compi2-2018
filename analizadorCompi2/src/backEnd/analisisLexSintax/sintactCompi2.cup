@@ -33,8 +33,10 @@ parser code {:
 terminal String NamInt, NamFloat, NamBoolean, NamString, NamMain, NamIf, NamWhile;
 terminal String PrintN, PrintS, BreakCom, Mas, Menos, Por, Div, Mayor, Menor, Igual, And;
 terminal String Or, Asignacion, EndCom, ParAbierto, ParCerrado, Coma, Booleano, Cadena;
-terminal String Entero, Decimal, Identificador, NamElse, Diferente, CorCerrado, CorAbierto;
-
+terminal String Entero,Decimal,Identificador, NamElse, Diferente, CorCerrado, CorAbierto;
+/*terminal int Entero;
+terminal float Decimal;
+*/
 /* Non terminal */
 non terminal String CODIGO, INICIO_CODIGO;
 non terminal Boolean MAIN_IDE, MAIN_BODY, MAIN_FUNCION, CUERPO_CODIGO;
@@ -103,12 +105,12 @@ OPERACION		::=	OPERACION:e1 Mas:e3 OPERACION:e2 			{: RESULT = semanticM.operati
 					| OPERACION:e1 Or:e3 OPERACION:e2 			{: RESULT = semanticM.operations.operation(lanC.OR, 	e1, e2, e3left, e3right); :}
 					| OPERACION:e1 And:e3 OPERACION:e2			{: RESULT = semanticM.operations.operation(lanC.AND, 	e1, e2, e3left, e3right); :}
 					| ParAbierto OPERACION:e ParCerrado			{: RESULT = e; :}
-					| Menos Entero:e							{: RESULT = new tempVar(-Integer.getInteger(e),	lanC.INTEGER,	eleft, eright); :}
-					| Menos Decimal:e							{: RESULT = new tempVar(-Float.valueOf(e), 		lanC.FLOAT, 	eleft, eright); :}
-					| Entero:e									{: RESULT = new tempVar(-Integer.getInteger(e), lanC.INTEGER, 	eleft, eright); :}
-					| Decimal:e									{: RESULT = new tempVar(Float.valueOf(e), 		lanC.FLOAT, 	eleft, eright); :}
-					| Booleano:e 								{: RESULT = new tempVar(Boolean.valueOf(e),    	lanC.BOOLEAN,	eleft, eright); :}
-					| Cadena:e 		 							{: RESULT = new tempVar(lanC.clearString(e),   	lanC.STRING,	eleft, eright); :}
+					| Menos Entero:e							{: RESULT = new tempVar(-Integer.parseInt(e),	lanC.INTEGER,	eleft, eright); :}
+					| Menos Decimal:e							{: RESULT = new tempVar(-Float.parseFloat(e),	lanC.FLOAT, 	eleft, eright); :}
+					| Entero:e									{: RESULT = new tempVar(Integer.parseInt(e),	lanC.INTEGER, 	eleft, eright); :}
+					| Decimal:e									{: RESULT = new tempVar(Float.parseFloat(e),	lanC.FLOAT, 	eleft, eright); :}
+					| Booleano:e 								{: RESULT = new tempVar(Boolean.valueOf(e),		lanC.BOOLEAN,	eleft, eright); :}
+					| Cadena:e 		 							{: RESULT = new tempVar(lanC.clearString(e),	lanC.STRING,	eleft, eright); :}
 					| Identificador:e 							{: RESULT = semanticM.getTempVarFromList(e, eleft, eright); :}
 					;
 

@@ -1,6 +1,7 @@
 package backEnd.Objects.finalStr;
 
 import backEnd.Objects.dataType;
+import backEnd.langConstants.languageConstants;
 import java.util.LinkedList;
 
 /**
@@ -15,6 +16,7 @@ public class cuarteta {
     String operando_1;
     String operando_2;
     LinkedList<Integer> arrayDimensions;
+    languageConstants languageC = new languageConstants();
 
     /**
      * This constructor is to set "FLAGS" like
@@ -87,6 +89,63 @@ public class cuarteta {
         this.operando_1 = null;
         this.operando_2 = null;
 
+    }
+
+    /**
+     * This method create the text to be print into the out file of 3 Directions
+     * Code
+     *
+     * @return
+     */
+    public String getText() {
+        if (operation == languageC.MAS_ID) {
+            return getOpText(languageC.MAS);
+        } else if (operation == languageC.MENOS_ID) {
+            return getOpText(languageC.MENOS);
+        } else if (operation == languageC.POR_ID) {
+            return getOpText(languageC.POR);
+        } else if (operation == languageC.DIV_ID) {
+            return getOpText(languageC.DIV);
+        } else if (operation == languageC.IF_ID) {
+            return (languageC.IF_NAME + languageC.PAR_ABIERTO + operator + languageC.PAR_CERRADO + " " + languageC.GOTO_STR + " " + operando_1);
+        } else if (operation == languageC.GOTO_STR_ID) {
+            return (languageC.GOTO_STR + " " + operator);
+        } else if (operation == languageC.FLAG_STR_ID) {
+            return (operator + languageC.FLAG_STR);
+        } else if (operation == languageC.WRITE_ID) {
+            return (languageC.WRITE + languageC.PAR_ABIERTO + operator + languageC.PAR_CERRADO);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * This method return the logic operation for '>', '<', '!=', '=='
+     *
+     * like: "x < 4" or "y != N"
+     *
+     * @return
+     */
+    public String getLogicOp() {
+        if (operation == languageC.MAYOR_Q_ID) {
+            return getOp(languageC.MAYOR_Q);
+        } else if (operation == languageC.MENOR_Q_ID) {
+            return getOp(languageC.MENOR_Q);
+        } else if (operation == languageC.DIF_ID) {
+            return getOp(languageC.DIF);
+        } else if (operation == languageC.IGUAL_ID) {
+            return getOp(languageC.IGUAL);
+        } else {
+            return null;
+        }
+    }
+
+    private String getOpText(String op) {
+        return (operator + " " + languageC.ASIGNAR + " " + getOp(op));
+    }
+
+    private String getOp(String op) {
+        return (operando_1 + " " + op + " " + operando_2);
     }
 
     public dataType getdType() {

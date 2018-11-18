@@ -46,7 +46,6 @@ boolID = "true" | "false"
   		String errorText = ("Error en linea line "+(yyline+1)+", columna "+(yycolumn+1)+" : "+message);
     	System.out.println(errorText);
     	semanticM.errorAndPlace(lanC.AN_LEXICO, errorText);
-		semanticM.setErrorFound(true);
   	}
 
 	private void imprimirToken(String textSalida){
