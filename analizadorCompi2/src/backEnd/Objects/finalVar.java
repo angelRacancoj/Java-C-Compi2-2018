@@ -6,6 +6,7 @@
 package backEnd.Objects;
 
 import backEnd.langConstants.languageConstants;
+import java.util.LinkedList;
 
 /**
  *
@@ -17,29 +18,41 @@ public class finalVar extends Variable {
 
     dataType dType;
     String idVar;
+    LinkedList<tempVar> dimensions;
 
     public finalVar(String idVar, dataType dType, int vInteger, int category) {
         super(vInteger, category);
         this.dType = dType;
         this.idVar = idVar;
+        this.dimensions = null;
     }
 
     public finalVar(String idVar, dataType dType, float vFloat, int category) {
         super(vFloat, category);
         this.dType = dType;
         this.idVar = idVar;
+        this.dimensions = null;
     }
 
     public finalVar(String idVar, dataType dType, String vString, int category) {
         super(vString, category);
         this.dType = dType;
         this.idVar = idVar;
+        this.dimensions = null;
     }
 
     public finalVar(String idVar, dataType dType, boolean vBool, int category) {
         super(vBool, category);
         this.dType = dType;
         this.idVar = idVar;
+        this.dimensions = null;
+    }
+
+    public finalVar(String idVar, dataType dType, LinkedList<tempVar> dimensions, int category) {
+        super(category);
+        this.dType = dType;
+        this.idVar = idVar;
+        this.dimensions = dimensions;
     }
 
     public String textVar() {
@@ -135,6 +148,14 @@ public class finalVar extends Variable {
     @Override
     public void setCategory(int category) {
         this.category = category;
+    }
+
+    public LinkedList<tempVar> getDimensions() {
+        return dimensions;
+    }
+
+    public void setDimensions(LinkedList<tempVar> dimensions) {
+        this.dimensions = dimensions;
     }
 
 }

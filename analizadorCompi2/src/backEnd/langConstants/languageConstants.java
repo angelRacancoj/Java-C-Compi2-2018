@@ -61,6 +61,7 @@ public class languageConstants {
     public final String WHILE_LABLE = "lw";
     public final String else_LABLE = "";
 
+    public final String ARRAY_LABLE = "la";
     /*Lables for logic operations*/
     public final String LOGIC_LABLE = "lb";
     public final String LOGIC_FLAG_LABLE = "b";
@@ -94,7 +95,10 @@ public class languageConstants {
     public final String FALSE_STR = "false";
     public final String PAR_ABIERTO = "(";
     public final String PAR_CERRADO = ")";
+    public final String LLAVE_ABIERTO = "[";
+    public final String LLAVE_CERRADO = "]";
     public final String WRITE = "print";
+    public final String SCANNER_NAME = "scan";
 
     /*Etiquetas para ciclos*/
     public final int GOTO_STR_ID = -1;
@@ -124,6 +128,8 @@ public class languageConstants {
     public final int TRUE_STR_ID = 16;
     public final int FALSE_STR_ID = 17;
     public final int WRITE_ID = 18;
+    public final int ARRAY_ASIGNED_ID = 19;
+    public final int SCAN_ID = 20;
     public final int _ID = 0;
 
     public boolean stringIsEmpty(String textoIn) {

@@ -6,6 +6,7 @@
 package backEnd.semantic;
 
 import backEnd.Objects.finalStr.cuarteta;
+import backEnd.Objects.finalVar;
 import backEnd.Objects.funtion.*;
 import backEnd.Objects.tempVar;
 import backEnd.exceptions.InputsVaciosException;
@@ -312,6 +313,21 @@ public class semanticFunctions {
             }
         } else {
             semanticM.errorAndPlace(constL.AN_SEMANTICO, "Error al ingresar el texto, verificar errores anteriores cercanos a Linea: " + row + " Columna: " + column);
+        }
+    }
+
+    public void correctScanner(int dataType, String id, int row, int column) throws InputsVaciosException {
+        finalVar fVar = semanticM.findVariable(id);
+        if (fVar != null) {
+            if (dataType == constL.STRING && fVar.getdType().getNameData() == constL.STRING) {
+                semanticM.addTemp4DirCodeFuntion(fVar.getIdVar(), constL.SCAN_ID);
+            } else if (dataType == constL.INTEGER && (fVar.getdType().getNameData() == constL.INTEGER || fVar.getdType().getNameData() == constL.FLOAT)) {
+                semanticM.addTemp4DirCodeFuntion(fVar.getIdVar(), constL.SCAN_ID);
+            } else {
+                semanticM.errorAndPlace(constL.AN_SEMANTICO, "Escaner con tipo de dato invalido, Linea: " + row);
+            }
+        } else {
+            semanticM.errorAndPlace(constL.AN_SEMANTICO, "No existe la variable " + id + " Linea: " + row + " Columna: " + column);
         }
     }
 

@@ -18,14 +18,15 @@ import java.util.LinkedList;
 public class semanticOperations {
 
     private languageConstants constL = new languageConstants();
-    //private LinkedList<String> temp3dir = new LinkedList<>();
     private LinkedList<cuarteta> temp4thdir = new LinkedList<>();
     private int contador = 0;
     private int boolCont = 0;
     semanticManager semanticM;
+    public semanticArray semArray;
 
     public semanticOperations(semanticManager semanticM) {
         this.semanticM = semanticM;
+        this.semArray = new semanticArray(semanticM);
     }
 
     private void catchIncorrectValues(String operator, tempVar dato1, tempVar dato2, int row, int column, int type1, int type2) throws InputsVaciosException {
@@ -60,11 +61,28 @@ public class semanticOperations {
     }
 
     private void sendError(String name, String operator, int row, int column) {
-        semanticM.errorAndPlace(constL.AN_SEMANTICO, "Dato incompatible para la operacion>> " + operator + " << \nDato: " + name + " Fila: " + row + " Columna: " + column);
+        semanticM.errorAndPlace(constL.AN_SEMANTICO, "Dato incompatible para la operacion>> " + operator + " << \nDato: " + name + " Linea: " + row + " Columna: " + column);
         //throw new InputsVaciosException("Dato incompatible para la operacion>> " + operator + " << \nDato: " + name + " Fila: " + row + " Columna: " + column);
     }
 
-    private void sendError(String errorMessage) {
+    /**
+     * This method add the error to the principal error list
+     *
+     * @param name
+     * @param textOut
+     * @param operator
+     * @param row
+     */
+    public void sendError(String name, String textOut, String operator, int row) {
+        semanticM.errorAndPlace(constL.AN_SEMANTICO, textOut + " >> " + operator + " << \nDato requerido: " + name + " Linea: " + row);
+    }
+
+    /**
+     * Indicate the text to the message
+     *
+     * @param errorMessage
+     */
+    public void sendError(String errorMessage) {
         semanticM.errorAndPlace(constL.AN_SEMANTICO, errorMessage);
     }
 
@@ -404,7 +422,7 @@ public class semanticOperations {
     }
 
     /**
-     * Just clear the 3 Directions temporal list, and 4th directions too.
+     * Just clear the 4 Directions temporal list.
      */
     public void resetTemp3VarList() {
         temp4thdir.clear();

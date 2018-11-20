@@ -67,6 +67,8 @@ boolID = "true" | "false"
 	"else" 				{imprimirToken(yytext()); return symbol(sym.NamElse, 		yytext());}
 	"printn" 			{imprimirToken(yytext()); return symbol(sym.PrintN, 		yytext());}
 	"prints" 			{imprimirToken(yytext()); return symbol(sym.PrintS, 		yytext());}
+	"scanS" 			{imprimirToken(yytext()); return symbol(sym.ScanS,	 		yytext());}
+	"scanN" 			{imprimirToken(yytext()); return symbol(sym.ScanN,	 		yytext());}
 	"break" 			{imprimirToken(yytext()); return symbol(sym.BreakCom,		yytext());}
 	"+" 				{imprimirToken(yytext()); return symbol(sym.Mas, 			yytext());}
 	"-" 				{imprimirToken(yytext()); return symbol(sym.Menos,	 		yytext());}
@@ -84,6 +86,8 @@ boolID = "true" | "false"
 	"}" 				{imprimirToken(yytext()); return symbol(sym.CorCerrado, 	yytext());}
 	"(" 				{imprimirToken(yytext()); return symbol(sym.ParAbierto, 	yytext());}
 	")" 				{imprimirToken(yytext()); return symbol(sym.ParCerrado, 	yytext());}
+	"[" 				{imprimirToken(yytext()); return symbol(sym.KeyOpen, 		yytext());}
+	"]" 				{imprimirToken(yytext()); return symbol(sym.KeyClose,		yytext());}
 	"," 				{imprimirToken(yytext()); return symbol(sym.Coma, 			yytext());}
 	{boolID}		 	{imprimirToken(yytext()); return symbol(sym.Booleano,		yytext());}
 	{entero} 			{imprimirToken(yytext()); return symbol(sym.Entero, 		yytext());}

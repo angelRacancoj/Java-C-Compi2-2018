@@ -1,6 +1,7 @@
 package backEnd.Objects.finalStr;
 
 import backEnd.Objects.dataType;
+import backEnd.Objects.tempVar;
 import backEnd.langConstants.languageConstants;
 import java.util.LinkedList;
 
@@ -15,7 +16,7 @@ public class cuarteta {
     int operation;
     String operando_1;
     String operando_2;
-    LinkedList<Integer> arrayDimensions;
+    LinkedList<tempVar> arrayDimensions;
     languageConstants languageC = new languageConstants();
 
     /**
@@ -37,6 +38,8 @@ public class cuarteta {
      * Structure just to set values a = 10
      *
      * if ( d3 ) goto lf1 (operation id)
+     *
+     * arr[6] or list[la1]
      *
      * @param dType
      * @param operator
@@ -74,20 +77,41 @@ public class cuarteta {
     }
 
     /**
-     * This method is specific to create a new array object
+     * This method is specific to create a new array object arr[5]
      *
      * @param dType
      * @param operator
      * @param operation
+     * @param operando_1
      * @param arrayDimensions
      */
-    public cuarteta(dataType dType, String operator, int operation, LinkedList<Integer> arrayDimensions) {
+    public cuarteta(dataType dType, String operator, int operation, String operando_1, LinkedList<tempVar> arrayDimensions) {
         this.dType = dType;
         this.operator = operator;
         this.operation = operation;
         this.arrayDimensions = arrayDimensions;
-        this.operando_1 = null;
+        this.operando_1 = operando_1;
         this.operando_2 = null;
+
+    }
+
+    /**
+     * This method is specific to create a new array object arr[d2] = num
+     *
+     * @param dType
+     * @param operator
+     * @param operation
+     * @param operando_1
+     * @param operando_2
+     * @param arrayDimensions
+     */
+    public cuarteta(dataType dType, String operator, int operation, String operando_1, String operando_2, LinkedList<tempVar> arrayDimensions) {
+        this.dType = dType;
+        this.operator = operator;
+        this.operation = operation;
+        this.arrayDimensions = arrayDimensions;
+        this.operando_1 = operando_1;
+        this.operando_2 = operando_2;
 
     }
 
@@ -116,6 +140,12 @@ public class cuarteta {
             return (languageC.WRITE + languageC.PAR_ABIERTO + operator + languageC.PAR_CERRADO);
         } else if (operation == languageC.ASIGNAR_ID) {
             return (operator + " " + languageC.ASIGNAR + " " + operando_1);
+        } else if (operation == languageC.ARRAY_ID) {
+            return (operator + languageC.LLAVE_ABIERTO + operando_1 + languageC.LLAVE_CERRADO);
+        } else if (operation == languageC.ARRAY_ASIGNED_ID) {
+            return (operator + languageC.LLAVE_ABIERTO + operando_1 + languageC.LLAVE_CERRADO + " " + languageC.ASIGNAR + " " + operando_2);
+        } else if (operation == languageC.SCAN_ID) {
+            return (languageC.SCANNER_NAME + languageC.PAR_ABIERTO + operator + languageC.PAR_CERRADO);
         } else {
             return null;
         }
@@ -190,11 +220,11 @@ public class cuarteta {
         this.operando_2 = operando_2;
     }
 
-    public LinkedList<Integer> getArrayDimensions() {
+    public LinkedList<tempVar> getArrayDimensions() {
         return arrayDimensions;
     }
 
-    public void setArrayDimensions(LinkedList<Integer> arrayDimensions) {
+    public void setArrayDimensions(LinkedList<tempVar> arrayDimensions) {
         this.arrayDimensions = arrayDimensions;
     }
 

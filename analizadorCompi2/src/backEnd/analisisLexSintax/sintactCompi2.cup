@@ -6,6 +6,7 @@ import backEnd.Objects.*;
 import backEnd.Objects.funtion.*;
 import backEnd.langConstants.languageConstants;
 import GUI.codeEditor;
+import java.util.LinkedList;
 
 parser code {:
 
@@ -34,18 +35,20 @@ terminal String NamInt, NamFloat, NamBoolean, NamString, NamMain, NamIf, NamWhil
 terminal String PrintN, PrintS, BreakCom, Mas, Menos, Por, Div, Mayor, Menor, Igual, And;
 terminal String Or, Asignacion, EndCom, ParAbierto, ParCerrado, Coma, Booleano, Cadena;
 terminal String Entero,Decimal,Identificador, NamElse, Diferente, CorCerrado, CorAbierto;
+terminal String KeyOpen ,KeyClose, ScanS, ScanN;
 /*terminal int Entero;
 terminal float Decimal;
 */
 /* Non terminal */
 non terminal String CODIGO, INICIO_CODIGO;
 non terminal Boolean MAIN_IDE, MAIN_BODY, MAIN_FUNCION, CUERPO_CODIGO;
-non terminal Boolean WHILE_FUNCION, PRINT_FUNCION, PRINT_OPTION;
+non terminal Boolean WHILE_FUNCION, PRINT_FUNCION, PRINT_OPTION, SCAN_FUNCION;
 non terminal tempVar OPERACION;
+non terminal LinkedList<tempVar> ARRAY_DIMENSION;
 non terminal cicleFlag IF_ELSE, IF_ELSE_FUNCION;
 /*non terminal cicleFlag IF_FUNCION;*/  
 non terminal tempFinalVar ID_VAR;
-non terminal Integer DECLARACION_VAR; 
+non terminal Integer DECLARACION_VAR, SCAN_OPTION; 
 /*Precedence*/
 precedence left And, Or;
 precedence left Igual, Diferente;
@@ -78,6 +81,7 @@ MAIN_BODY		::=	MAIN_BODY MAIN_FUNCION:e	{:  :}
 MAIN_FUNCION	::=	IF_ELSE_FUNCION:e			{:  :}
 					| PRINT_FUNCION:e			{:  :}
 					| WHILE_FUNCION:e			{:  :}
+					| SCAN_FUNCION:e 			{:  :}
 					| DECLARACION_VAR EndCom	{:  :}
 					| ID_VAR:e1 EndCom:e2		{: semanticM.modifyValue(e1,e2left); :}
 					| BreakCom:e EndCom			{: semanticM.functions.breakFound(eleft, eright); :}
@@ -92,6 +96,15 @@ DECLARACION_VAR	::=	DECLARACION_VAR:e1 Coma:e3 ID_VAR:e2	{: semanticM.addVariabl
 
 ID_VAR			::=	Identificador:e								{: RESULT = semanticM.operations.varToSave(e, new tempVar(lanC.NO_TYPE_AUX,eleft, eright)); :}
 					| Identificador:e1 Asignacion OPERACION:e2 	{: RESULT = semanticM.operations.varToSave(e1, e2); :}
+					| Identificador:e1 ARRAY_DIMENSION:e2 							{: RESULT = semanticM.operations.semArray.varToSave(e1, e2, e1left); :}
+					| Identificador:e1 ARRAY_DIMENSION:e2 Asignacion OPERACION:e3 	{: RESULT = semanticM.operations.semArray.varToSave(e1, e2, e3, e1left); :}
+					;
+					/*| Identificador:e1 Asignacion Identificador:e2 ARRAY_DIMENSION:e3				{:  :}
+					| Identificador:e1 ARRAY_DIMENSION:e2 Asignacion Identificador:e3 ARRAY_DIMENSION:e4 	{:  :}
+					;*/
+
+ARRAY_DIMENSION	::=	ARRAY_DIMENSION:e1 KeyOpen:e3 OPERACION:e2 KeyClose	{: RESULT =  semanticM.operations.semArray.startDimension(e1, e2, e3left);:}
+					| KeyOpen:e2 OPERACION:e1 KeyClose					{: RESULT =  semanticM.operations.semArray.startDimension(e1, e2left);:}
 					;
 
 OPERACION		::=	OPERACION:e1 Mas:e3 OPERACION:e2 			{: RESULT = semanticM.operations.operation(lanC.MAS, 	e1, e2, e3left, e3right); :}
@@ -120,10 +133,11 @@ IF_ELSE_FUNCION	::= IF_ELSE:e1 							{: semanticM.functions.setJumpFlag(e1); :}
 					;
 
 IF_ELSE 		::= IF_ELSE:e4 NamElse NamIf ParAbierto 
-					  OPERACION:e1 ParCerrado CorAbierto:e2 				{: RESULT = semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right, e4); :}
-					  MAIN_BODY CorCerrado:e3 								{: semanticM.functions.closeIfCycle(e3left, e3right); :}
-					| NamIf ParAbierto OPERACION:e1 ParCerrado CorAbierto:e2 {: RESULT = semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right,null); :}
-					  MAIN_BODY CorCerrado:e3 								{: semanticM.functions.closeIfCycle(e3left, e3right); :}
+					  OPERACION:e1 ParCerrado CorAbierto:e2 	{: RESULT = semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right, e4); :}
+					  MAIN_BODY CorCerrado:e3 					{: semanticM.functions.closeIfCycle(e3left, e3right); :}
+					| NamIf ParAbierto OPERACION:e1 
+					  ParCerrado CorAbierto:e2 					{: RESULT = semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right,null); :}
+					  MAIN_BODY CorCerrado:e3 					{: semanticM.functions.closeIfCycle(e3left, e3right); :}
 					;
 /*
 IF_FUNCION 		::= NamIf ParAbierto OPERACION:e1 ParCerrado CorAbierto:e2	{: RESULT = semanticM.functions.ifCycleInit(e1, e1left, e1right, e2left, e2right); :}
@@ -140,4 +154,11 @@ PRINT_FUNCION	::= PRINT_OPTION ParAbierto:e1 OPERACION:e2 ParCerrado EndCom	{: s
 
 PRINT_OPTION	::= PrintN 		{: :}
 					| PrintS	{: :}
+					;
+
+SCAN_FUNCION	::= SCAN_OPTION:e1 ParAbierto:e3 Identificador:e2 ParCerrado EndCom	{: semanticM.functions.correctScanner(e1, e2, e3left, e3right); :}
+					;
+
+SCAN_OPTION		::= ScanN 	{: RESULT = lanC.INTEGER; :}
+					| ScanS	{: RESULT = lanC.STRING;  :}
 					;

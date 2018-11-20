@@ -5,6 +5,8 @@
  */
 package backEnd.Objects;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author angel
@@ -13,10 +15,24 @@ public class tempFinalVar {
 
     String id;
     tempVar dato;
+    LinkedList<tempVar> dimensions;
 
     public tempFinalVar(String id, tempVar dato) {
         this.id = id;
         this.dato = dato;
+        this.dimensions = null;
+    }
+
+    public tempFinalVar(String id, LinkedList<tempVar> dimensions) {
+        this.id = id;
+        this.dimensions = dimensions;
+        this.dato = null;
+    }
+
+    public tempFinalVar(String id, tempVar dato, LinkedList<tempVar> dimensions) {
+        this.id = id;
+        this.dato = dato;
+        this.dimensions = dimensions;
     }
 
     public String getId() {
@@ -33,6 +49,14 @@ public class tempFinalVar {
 
     public void setDato(tempVar dato) {
         this.dato = dato;
+    }
+
+    public LinkedList<tempVar> getDimensions() {
+        return dimensions;
+    }
+
+    public void setDimensions(LinkedList<tempVar> dimensions) {
+        this.dimensions = dimensions;
     }
 
 }

@@ -8,6 +8,7 @@ package backEnd.semantic;
 import backEnd.Objects.finalStr.errorObject;
 import backEnd.Objects.finalStr.cuarteta;
 import backEnd.Objects.*;
+import backEnd.exceptions.InputsVaciosException;
 import backEnd.files.ManejadorArchivo;
 import backEnd.langConstants.languageConstants;
 import java.io.IOException;
@@ -22,7 +23,6 @@ public class semanticManager {
     languageConstants languageC = new languageConstants();
     LinkedList<dataType> typeList = new LinkedList<>();
     LinkedList<finalVar> varList = new LinkedList<>();
-    //LinkedList<String> threeDirectionsCode = new LinkedList<>();
     LinkedList<cuarteta> forthDirCode = new LinkedList<>();
     LinkedList<errorObject> errors = new LinkedList<>();
 
@@ -78,34 +78,73 @@ public class semanticManager {
      * @param data
      * @param row
      */
-    public void modifyValue(tempFinalVar data, int row) {
+    public void modifyValue(tempFinalVar data, int row) throws InputsVaciosException {
         finalVar tempVarFound = findVariable(data.getId());
 
         if ((tempVarFound != null) && (data != null)) {
             if ((tempVarFound.getdType().getNameData() == languageC.STRING) && (data.getDato().getCategory() == languageC.STRING)) {
-                tempVarFound.setvString(data.getDato().getvString());
-                addTemp3DirCodeOp();
+                if (tempVarFound.getDimensions() == null) {
+                    tempVarFound.setvString(data.getDato().getvString());
+                    addTemp3DirCodeOp();
+                } else {
+                    addTemp3DirCodeOp();
+                    add3dirArray();
+                }
             } else if ((tempVarFound.getdType().getNameData() == languageC.BOOLEAN) && (data.getDato().getCategory() == languageC.BOOLEAN)) {
-                tempVarFound.setvBool(data.getDato().isvBool());
-                LinkedList<cuarteta> listTemp = new LinkedList<>();
-                addTemp3DirCodeOp();
-                listTemp.addAll(data.getDato().getAndOrObject().getStructure());
-                listTemp.add(new cuarteta(data.getDato().getAndOrObject().getTrueFlag(), languageC.FLAG_STR_ID));
-                listTemp.add(new cuarteta(tempVarFound.getdType(), data.getId(), languageC.ASIGNAR_ID, "1"));
-                listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.GOTO_STR_ID));
-                listTemp.add(new cuarteta(data.getDato().getAndOrObject().getFalseFlag(), languageC.FLAG_STR_ID));
-                listTemp.add(new cuarteta(tempVarFound.getdType(), data.getId(), languageC.ASIGNAR_ID, "0"));
-                listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.FLAG_STR_ID));
-                operations.addBoolCont();
-                forthDirCode.addAll(listTemp);
-                operations.resetTemp3VarList();
+                if (tempVarFound.getDimensions() == null) {
+                    tempVarFound.setvBool(data.getDato().isvBool());
+                    LinkedList<cuarteta> listTemp = new LinkedList<>();
+                    addTemp3DirCodeOp();
+                    listTemp.addAll(data.getDato().getAndOrObject().getStructure());
+                    listTemp.add(new cuarteta(data.getDato().getAndOrObject().getTrueFlag(), languageC.FLAG_STR_ID));
+                    listTemp.add(new cuarteta(tempVarFound.getdType(), data.getId(), languageC.ASIGNAR_ID, "1"));
+                    listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.GOTO_STR_ID));
+                    listTemp.add(new cuarteta(data.getDato().getAndOrObject().getFalseFlag(), languageC.FLAG_STR_ID));
+                    listTemp.add(new cuarteta(tempVarFound.getdType(), data.getId(), languageC.ASIGNAR_ID, "0"));
+                    listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.FLAG_STR_ID));
+                    operations.addBoolCont();
+                    forthDirCode.addAll(listTemp);
+                    operations.resetTemp3VarList();
+                } else {
+                    LinkedList<cuarteta> listTemp = new LinkedList<>();
+                    addTemp3DirCodeOp();
+                    listTemp.addAll(data.getDato().getAndOrObject().getStructure());
+                    String formula = operations.semArray.arrayFormula(tempVarFound, data.getDimensions());
+                    add3dirArray();
+                    listTemp.add(new cuarteta(data.getDato().getAndOrObject().getTrueFlag(), languageC.FLAG_STR_ID));
+                    if (data.getDimensions().size() == 1) {
+                        listTemp.add(new cuarteta(tempVarFound.getdType(), tempVarFound.getIdVar(), languageC.ARRAY_ASIGNED_ID, languageC.getID_Value(data.getDimensions().get(0)), "1", data.getDimensions()));
+                        listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.GOTO_STR_ID));
+                        listTemp.add(new cuarteta(data.getDato().getAndOrObject().getFalseFlag(), languageC.FLAG_STR_ID));
+                        listTemp.add(new cuarteta(tempVarFound.getdType(), tempVarFound.getIdVar(), languageC.ARRAY_ASIGNED_ID, languageC.getID_Value(data.getDimensions().get(0)), "0", data.getDimensions()));
+                    } else {
+                        listTemp.add(new cuarteta(tempVarFound.getdType(), tempVarFound.getIdVar(), languageC.ARRAY_ASIGNED_ID, formula, "1", data.getDimensions()));
+                        listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.GOTO_STR_ID));
+                        listTemp.add(new cuarteta(data.getDato().getAndOrObject().getFalseFlag(), languageC.FLAG_STR_ID));
+                        listTemp.add(new cuarteta(tempVarFound.getdType(), tempVarFound.getIdVar(), languageC.ARRAY_ASIGNED_ID, formula, "0", data.getDimensions()));
+                    }
+                    listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.FLAG_STR_ID));
+                    operations.addBoolCont();
+                    forthDirCode.addAll(listTemp);
+                    operations.resetTemp3VarList();
+                }
 
             } else if ((tempVarFound.getdType().getNameData() == languageC.INTEGER) && (data.getDato().getCategory() == languageC.INTEGER)) {
-                tempVarFound.setvInteger(data.getDato().getvInteger());
-                addTemp3DirCodeOp();
+                if (tempVarFound.getDimensions() == null) {
+                    tempVarFound.setvInteger(data.getDato().getvInteger());
+                    addTemp3DirCodeOp();
+                } else {
+                    addTemp3DirCodeOp();
+                    add3dirArray();
+                }
             } else if ((tempVarFound.getdType().getNameData() == languageC.FLOAT) && (data.getDato().getCategory() == languageC.FLOAT)) {
-                tempVarFound.setvFloat(data.getDato().getvFloat());
-                addTemp3DirCodeOp();
+                if (tempVarFound.getDimensions() == null) {
+                    tempVarFound.setvFloat(data.getDato().getvFloat());
+                    addTemp3DirCodeOp();
+                } else {
+                    addTemp3DirCodeOp();
+                    add3dirArray();
+                }
             } else {
                 errorAndPlace(languageC.AN_SEMANTICO, "No es compatible la variable " + data.getId() + " del tipo " + languageC.getDataTypeName(data.getDato().getCategory()) + " linea: " + row);
                 reset4DirLists();
@@ -132,30 +171,50 @@ public class semanticManager {
         if (data != null) {
             finalVar tempVarFound = findVariable(data.getId());
             dataType tempType = findDType(dType);
-            if ((tempVarFound == null) && (tempType != null) && (data.getDato().getCategory() != languageC.NO_TYPE_AUX)) {
+            if ((tempVarFound == null) && (tempType != null) && ((data.getDato().getCategory() != languageC.NO_TYPE_AUX))) {
 
                 if (dType == languageC.INTEGER) {
-                    varList.add(new finalVar(data.getId(), tempType, data.getDato().getvInteger(), languageC.VARIABLE));
-                    addTemp3DirCodeOp();
+                    if (data.getDimensions() == null) {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDato().getvInteger(), languageC.VARIABLE));
+                        addTemp3DirCodeOp();
+                    } else {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDimensions(), languageC.VARIABLE));
+                        add3dirArray();
+                    }
                 } else if (dType == languageC.FLOAT) {
-                    varList.add(new finalVar(data.getId(), tempType, data.getDato().getvFloat(), languageC.VARIABLE));
-                    addTemp3DirCodeOp();
+                    if (data.getDimensions() == null) {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDato().getvFloat(), languageC.VARIABLE));
+                        addTemp3DirCodeOp();
+                    } else {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDimensions(), languageC.VARIABLE));
+                        add3dirArray();
+                    }
                 } else if ((dType == languageC.BOOLEAN) && (data.getDato().getCategory() == languageC.BOOLEAN)) {
-                    varList.add(new finalVar(data.getId(), tempType, data.getDato().isvBool(), languageC.VARIABLE));
-                    LinkedList<cuarteta> listTemp = new LinkedList<>();
-                    addTemp3DirCodeOp();
-                    listTemp.addAll(data.getDato().getAndOrObject().getStructure());
-                    listTemp.add(new cuarteta(data.getDato().getAndOrObject().getTrueFlag(), languageC.FLAG_STR_ID));
-                    listTemp.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "1"));
-                    listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.GOTO_STR_ID));
-                    listTemp.add(new cuarteta(data.getDato().getAndOrObject().getFalseFlag(), languageC.FLAG_STR_ID));
-                    listTemp.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
-                    listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.FLAG_STR_ID));
-                    forthDirCode.addAll(listTemp);
-                    operations.resetTemp3VarList();
+                    if (data.getDimensions() == null) {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDato().isvBool(), languageC.VARIABLE));
+                        LinkedList<cuarteta> listTemp = new LinkedList<>();
+                        addTemp3DirCodeOp();
+                        listTemp.addAll(data.getDato().getAndOrObject().getStructure());
+                        listTemp.add(new cuarteta(data.getDato().getAndOrObject().getTrueFlag(), languageC.FLAG_STR_ID));
+                        listTemp.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "1"));
+                        listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.GOTO_STR_ID));
+                        listTemp.add(new cuarteta(data.getDato().getAndOrObject().getFalseFlag(), languageC.FLAG_STR_ID));
+                        listTemp.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
+                        listTemp.add(new cuarteta(languageC.LOGIC_LABLE + operations.getBoolCont(), languageC.FLAG_STR_ID));
+                        forthDirCode.addAll(listTemp);
+                        operations.resetTemp3VarList();
+                    } else {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDimensions(), languageC.VARIABLE));
+                        add3dirArray();
+                    }
                 } else if ((dType == languageC.STRING) && (data.getDato().getCategory() == languageC.STRING)) {
-                    varList.add(new finalVar(data.getId(), tempType, data.getDato().getvString(), languageC.VARIABLE));
-                    addTemp3DirCodeOp();
+                    if (data.getDimensions() == null) {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDato().getvString(), languageC.VARIABLE));
+                        addTemp3DirCodeOp();
+                    } else {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDimensions(), languageC.VARIABLE));
+                        add3dirArray();
+                    }
                 } else {
                     errorAndPlace(languageC.AN_SEMANTICO, "No es compatible la variable " + data.getId() + " del tipo " + languageC.getDataTypeName(data.getDato().getCategory())
                             + " con el tipo de indicado " + languageC.getDataTypeName(dType) + " linea: " + row);
@@ -163,21 +222,41 @@ public class semanticManager {
                 }
             } else if ((tempVarFound == null) && (tempType != null) && (data.getDato().getCategory() == languageC.NO_TYPE_AUX)) {
                 if (dType == languageC.INTEGER) {
-                    varList.add(new finalVar(data.getId(), tempType, 0, languageC.VARIABLE));
-                    addTemp3DirCodeOp();
-                    forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
+                    if (data.getDimensions() == null) {
+                        varList.add(new finalVar(data.getId(), tempType, 0, languageC.VARIABLE));
+                        addTemp3DirCodeOp();
+                        forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
+                    } else {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDimensions(), languageC.VARIABLE));
+                        add3dirArray();
+                    }
                 } else if (dType == languageC.FLOAT) {
-                    varList.add(new finalVar(data.getId(), tempType, 0, languageC.VARIABLE));
-                    addTemp3DirCodeOp();
-                    forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
+                    if (data.getDimensions() == null) {
+                        varList.add(new finalVar(data.getId(), tempType, 0, languageC.VARIABLE));
+                        addTemp3DirCodeOp();
+                        forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "0"));
+                    } else {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDimensions(), languageC.VARIABLE));
+                        add3dirArray();
+                    }
                 } else if ((dType == languageC.BOOLEAN)) {
-                    varList.add(new finalVar(data.getId(), tempType, true, languageC.VARIABLE));
-                    addTemp3DirCodeOp();
-                    forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, languageC.TRUE_STR));
+                    if (data.getDimensions() == null) {
+                        varList.add(new finalVar(data.getId(), tempType, true, languageC.VARIABLE));
+                        addTemp3DirCodeOp();
+                        forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "1"));
+                    } else {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDimensions(), languageC.VARIABLE));
+                        add3dirArray();
+                    }
                 } else if ((dType == languageC.STRING)) {
-                    varList.add(new finalVar(data.getId(), tempType, "", languageC.VARIABLE));
-                    addTemp3DirCodeOp();
-                    forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "."));
+                    if (data.getDimensions() == null) {
+                        varList.add(new finalVar(data.getId(), tempType, "", languageC.VARIABLE));
+                        addTemp3DirCodeOp();
+                        forthDirCode.add(new cuarteta(tempType, data.getId(), languageC.ASIGNAR_ID, "."));
+                    } else {
+                        varList.add(new finalVar(data.getId(), tempType, data.getDimensions(), languageC.VARIABLE));
+                        add3dirArray();
+                    }
                 }
             } else if ((tempVarFound != null) && (tempType != null)) {
                 errorAndPlace(languageC.AN_SEMANTICO, "Ya se ha declarado la variable " + tempVarFound.getIdVar() + " de tipo "
@@ -291,9 +370,13 @@ public class semanticManager {
     }
 
     protected void addTemp3DirCodeOp() {
-        //threeDirectionsCode.addAll(operations.getTemp3dir());
         forthDirCode.addAll(operations.getTemp4thdir());
         operations.resetTemp3VarList();
+    }
+
+    protected void add3dirArray() {
+        forthDirCode.addAll(operations.semArray.getTemp4thdir());
+        operations.semArray.reset4dirList();
     }
 
     /**
@@ -355,10 +438,11 @@ public class semanticManager {
     public void resetAll() {
         forthDirCode.clear();
         varList.clear();
-        //threeDirectionsCode.clear();
         operations.resetTemp3VarList();
         operations.resetContador();
         functions.resetAll();
         errors.clear();
+        operations.semArray.reset4dirList();
+        operations.semArray.resetContador();
     }
 }
